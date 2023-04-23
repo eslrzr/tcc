@@ -1,0 +1,62 @@
+@startuml ucd-v1
+left to right direction
+skinparam usecase {
+  BackgroundColor darkcyan
+  BorderColor darkcyan
+  FontColor white
+}
+
+skinparam arrow {
+    ArrowColor black
+    Thickness 1.7
+}
+
+skinparam Linetype linear
+skinparam Padding 10
+
+package "Usuários" {
+    rectangle "Administração" {
+        actor "Administrador" as admin
+        actor "Contador" as contador
+    }
+    actor "Visitante" as visitante
+}
+
+
+rectangle "Login" as login {
+    usecase "Efetuar login" as efetuarLogin
+    usecase "Acessar plataforma administrativa" as acessarAdminitstrativo
+    admin -u-> (efetuarLogin)
+    contador -u-> (efetuarLogin)
+    (efetuarLogin) -l-> (acessarAdminitstrativo) : <<include>>
+}
+
+rectangle "Plataforma Administrativa" as plataformaAdministrativa {
+    usecase "Gerenciar funcionários" as gerenciarFuncionarios
+    usecase "Visualizar relatórios e gráficos" as relatoriosGraficos
+    usecase "Gerenciar contas a pagar/receber" as gerenciarContas
+    usecase "Gerenciar serviços" as gerenciarServicos
+    usecase "Gerar NFs" as gerarNFs
+    usecase "Gerenciar Exposições" as gerenciarExposicoes
+    admin -u-> (gerenciarFuncionarios)
+    (gerenciarFuncionarios) .u.> (acessarAdminitstrativo) : <<extend>>
+    admin -u-> (gerenciarExposicoes)
+    (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
+    admin -u-> (gerenciarServicos)
+    (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
+    (acessarAdminitstrativo) -u-> (relatoriosGraficos) : <<include>>
+    (acessarAdminitstrativo) -u-> (gerenciarContas) : <<include>>
+    contador -u-> (gerarNFs)
+    (gerarNFs) .u.> (acessarAdminitstrativo) : <<extend>>
+}
+
+rectangle "Plataforma" as plataforma {
+    usecase "Acessar plataforma" as acessarPlataforma
+    usecase "Agendar serviços" as agendarServicos
+    usecase "Entrar em contato" as contato
+    visitante -d-> (acessarPlataforma)
+    (acessarPlataforma) -d-> (agendarServicos) : <<include>>
+    (acessarPlataforma) -d-> (contato) : <<include>>
+}
+
+@enduml
