@@ -14,20 +14,22 @@ skinparam arrow {
 skinparam Linetype linear
 skinparam Padding 10
 
+actor "Master" as master
+
 package "Usuários" {
-    rectangle "Administração" {
-        actor "Administrador" as admin
-        actor "Contador" as contador
-    }
+    actor "Administrador" as admin
+    actor "Contador" as contador
     actor "Visitante" as visitante
 }
 
+' Master engloba todos os usuários de administração
+admin --|> master
+contador --|> master
 
 rectangle "Login" as login {
     usecase "Efetuar login" as efetuarLogin
     usecase "Acessar plataforma administrativa" as acessarAdminitstrativo
-    admin -u-> (efetuarLogin)
-    contador -u-> (efetuarLogin)
+    master -u-> (efetuarLogin)
     (efetuarLogin) -l-> (acessarAdminitstrativo) : <<include>>
 }
 
@@ -37,15 +39,17 @@ rectangle "Plataforma Administrativa" as plataformaAdministrativa {
     usecase "Gerenciar contas a pagar/receber" as gerenciarContas
     usecase "Gerenciar serviços" as gerenciarServicos
     usecase "Gerar NFs" as gerarNFs
-    usecase "Gerenciar Exposições" as gerenciarExposicoes
+    usecase "Gerenciar exposições" as gerenciarExposicoes
     admin -u-> (gerenciarFuncionarios)
     (gerenciarFuncionarios) .u.> (acessarAdminitstrativo) : <<extend>>
     admin -u-> (gerenciarExposicoes)
     (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
     admin -u-> (gerenciarServicos)
     (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
-    (acessarAdminitstrativo) -u-> (relatoriosGraficos) : <<include>>
-    (acessarAdminitstrativo) -u-> (gerenciarContas) : <<include>>
+    adm -u-> (relatoriosGraficos)
+    (acessarAdminitstrativo) <.u. (relatoriosGraficos) : <<extend>>
+    adm -u-> (gerenciarContas)
+    (acessarAdminitstrativo) <.u. (gerenciarContas) : <<extend>>
     contador -u-> (gerarNFs)
     (gerarNFs) .u.> (acessarAdminitstrativo) : <<extend>>
 }
@@ -55,8 +59,8 @@ rectangle "Plataforma" as plataforma {
     usecase "Agendar serviços" as agendarServicos
     usecase "Entrar em contato" as contato
     visitante -d-> (acessarPlataforma)
-    (acessarPlataforma) -d-> (agendarServicos) : <<include>>
-    (acessarPlataforma) -d-> (contato) : <<include>>
+    (acessarPlataforma) <.d. (agendarServicos) : <<extend>>
+    (acessarPlataforma) <.d. (contato) : <<extend>>
 }
 
 @enduml
