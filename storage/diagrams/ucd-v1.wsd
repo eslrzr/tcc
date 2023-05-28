@@ -48,9 +48,9 @@ rectangle "Plataforma Administrativa" as plataformaAdministrativa {
     (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
     admin -u-> (gerenciarServicos)
     (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
-    adm -u-> (relatoriosGraficos)
+    admin -u-> (relatoriosGraficos)
     (acessarAdminitstrativo) <.u. (relatoriosGraficos) : <<extend>>
-    adm -u-> (gerenciarContas)
+    admin -u-> (gerenciarContas)
     (acessarAdminitstrativo) <.u. (gerenciarContas) : <<extend>>
     contador -u-> (gerarNFs)
     (gerarNFs) .u.> (acessarAdminitstrativo) : <<extend>>
