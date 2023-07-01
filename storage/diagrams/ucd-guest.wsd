@@ -1,0 +1,32 @@
+@startuml "Diagrama de Casos de Uso - Separado por atores"
+left to right direction
+skinparam usecase {
+    BackgroundColor darkcyan
+    BorderColor darkcyan
+    FontColor white
+}
+
+skinparam arrow {
+    ArrowColor black
+    Thickness 1.7
+}
+
+skinparam Padding 10
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+
+frame "SPA - VueJS" {
+
+    package "Usuários" {
+        actor "Visitante" as visitante
+    }
+
+    ' Exemplificando ações da plataforma
+    frame "Plataforma" {
+        usecase "Acessar plataforma" as acessarPlataforma
+        usecase "Entrar em contato" as contato
+        visitante -d-> (acessarPlataforma)
+        (contato) .d.> (acessarPlataforma) : <<extend>>
+    }
+}
+@enduml

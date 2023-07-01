@@ -1,0 +1,72 @@
+@startuml "Diagrama de Casos de Uso"
+left to right direction
+skinparam usecase {
+    BackgroundColor darkcyan
+    BorderColor darkcyan
+    FontColor white
+}
+
+skinparam arrow {
+    ArrowColor black
+    Thickness 1.7
+}
+
+skinparam Padding 10
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+
+frame "Monolito - Laravel" {
+    actor "Master" as master
+
+    package "Usuários" {
+        actor "Administrador" as admin
+        actor "Contador" as contador
+    }
+
+    ' Master engloba todos os usuários de administração
+    admin --|> master
+    contador --|> master
+
+    ' Exemplificando ação de login
+    frame "Login" {
+        usecase "Efetuar login" as efetuarLogin
+        usecase "Acessar plataforma administrativa" as acessarAdminitstrativo
+        ' Utilizando linha abaixo apenas paara melhorar exibição do diagrama
+        master -[hidden]u-> (efetuarLogin)
+        master -[hidden]u-> (efetuarLogin)
+        master -[norank]u-> (efetuarLogin)
+        (efetuarLogin) -l-> (acessarAdminitstrativo) : <<include>>
+    }
+
+    ' Exemplificando ações da área administrativa
+    frame "Plataforma Administrativa" {
+        usecase "Gerenciar funcionários" as gerenciarFuncionarios
+        usecase "Visualizar relatórios e gráficos" as relatoriosGraficos
+        usecase "Gerenciar contas a pagar/receber" as gerenciarContas
+        usecase "Gerenciar serviços" as gerenciarServicos
+        usecase "Gerar NFs" as gerarNFs
+        usecase "Gerenciar exposições" as gerenciarExposicoes
+        usecase "Gerenciar contatos" as gerenciarContatos
+        usecase "Gerenciar documentos" as gerenciarDocumentos
+        usecase "Processar documentos" as processarDocumentos
+        admin -u-> (gerenciarFuncionarios)
+        (gerenciarFuncionarios) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarExposicoes)
+        (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarContatos)
+        (gerenciarContatos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarServicos)
+        (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (relatoriosGraficos)
+        (relatoriosGraficos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarContas)
+        (gerenciarContas) .u.> (acessarAdminitstrativo)  : <<extend>>
+        admin -u-> (gerarNFs)
+        (gerarNFs) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarDocumentos)
+        (gerenciarDocumentos) .u.> (acessarAdminitstrativo) : <<extend>>
+        contador -u-> (processarDocumentos)
+        (processarDocumentos) .u.> (acessarAdminitstrativo) : <<extend>>
+    }
+}
+@enduml
