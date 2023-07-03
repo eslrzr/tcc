@@ -43,28 +43,37 @@ frame "Monolito - Laravel" {
         usecase "Gerenciar funcionários" as gerenciarFuncionarios
         usecase "Visualizar relatórios e gráficos" as relatoriosGraficos
         usecase "Gerenciar contas a pagar/receber" as gerenciarContas
+        usecase "Gerenciar entradas e saídas" as gerenciarSaldo
         usecase "Gerenciar serviços" as gerenciarServicos
+        usecase "Gerenciar projetos" as gerenciarProjetos
+        usecase "Gerenciar orçamentos" as gerenciarOrçamentos
         usecase "Gerar NFs" as gerarNFs
         usecase "Gerenciar exposições" as gerenciarExposicoes
         usecase "Gerenciar contatos" as gerenciarContatos
         usecase "Gerenciar documentos" as gerenciarDocumentos
         usecase "Processar documentos" as processarDocumentos
-        admin -u-> (gerenciarFuncionarios)
-        (gerenciarFuncionarios) .u.> (acessarAdminitstrativo) : <<extend>>
-        admin -u-> (gerenciarExposicoes)
-        (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
-        admin -u-> (gerenciarContatos)
-        (gerenciarContatos) .u.> (acessarAdminitstrativo) : <<extend>>
-        admin -u-> (gerenciarServicos)
-        (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
-        admin -u-> (relatoriosGraficos)
-        (relatoriosGraficos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarSaldo)
+        (gerenciarSaldo) .u.> (acessarAdminitstrativo) : <<extend>>
         admin -u-> (gerenciarContas)
         (gerenciarContas) .u.> (acessarAdminitstrativo)  : <<extend>>
+        admin -u-> (relatoriosGraficos)
+        (relatoriosGraficos) .u.> (acessarAdminitstrativo) : <<extend>>
         admin -u-> (gerarNFs)
         (gerarNFs) .u.> (acessarAdminitstrativo) : <<extend>>
         admin -u-> (gerenciarDocumentos)
         (gerenciarDocumentos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarServicos)
+        (gerenciarServicos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarExposicoes)
+        (gerenciarExposicoes) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarProjetos)
+        (gerenciarProjetos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarOrçamentos)
+        (gerenciarOrçamentos) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarFuncionarios)
+        (gerenciarFuncionarios) .u.> (acessarAdminitstrativo) : <<extend>>
+        admin -u-> (gerenciarContatos)
+        (gerenciarContatos) .u.> (acessarAdminitstrativo) : <<extend>>
         contador -u-> (processarDocumentos)
         (processarDocumentos) .u.> (acessarAdminitstrativo) : <<extend>>
     }
