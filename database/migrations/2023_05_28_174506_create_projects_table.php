@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
-            $table->date('start_date')->nullable()->comment('Data de início');
-            $table->date('end_date')->nullable()->comment('Data de término');
+            $table->enum('process_status', ['N', 'A', 'F', 'R'])->default('N')->comment('N - Não iniciado, A - Em andamento, F - Finalizado');
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->timestampsTz();
         });
     }
