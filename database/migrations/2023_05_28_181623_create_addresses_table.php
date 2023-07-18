@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('zip_code');
             $table->string('formatted_address');
             $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('cascade');
-            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('cascade');
+            $table->foreignId('service_id')->nullable()->constrained('services')->onDelete('cascade');
             $table->timestampsTz();
         });
     }

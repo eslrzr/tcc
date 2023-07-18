@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('cpf')->unique();
+            $table->string('number');
             $table->date('birth_date')->nullable();
-            $table->enum('work_status', ['A', 'D', 'F'])->default('A')->comment('A - Ativo, D - Desligado, F - Férias');
-            $table->date('admission_date')->nullable();
+            $table->enum('work_status', ['A', 'D'])->default('A')->comment('A - Ativo, D - Desligado');
             $table->decimal('salary', 10, 2)->nullable();
             $table->foreignId('role_id')->constrained('employee_roles');
             $table->timestampsTz();

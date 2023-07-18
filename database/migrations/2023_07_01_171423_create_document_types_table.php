@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('system_logs', function (Blueprint $table) {
+        Schema::create('document_types', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('action');
-            $table->string('message');
-            $table->foreignId('user_id')->constrained('users')->nullable();
-            $table->string('ip_address');
+            $table->char('code', 2)->unique()->comment('Código do tipo de documento');
+            $table->string('name');
             $table->timestampsTz();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('system_logs');
+        Schema::dropIfExists('document_types');
     }
 };

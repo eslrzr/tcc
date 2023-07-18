@@ -14,6 +14,9 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('path');
+            $table->string('service_name');
+            $table->string('amount');
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->timestampsTz();
         });
     }
