@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::get('/', [AuthController::class, 'loginView'])->name('loginView');
 
-Auth::routes();
+// auth
+Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/admin', [HomeController::class, 'index'])->name('home');
+// admin
+Route::prefix('admin')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+})->middleware('auth');
