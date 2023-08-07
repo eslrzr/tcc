@@ -1,9 +1,3 @@
-@if(Auth::check())
-    @php
-        header("Location: /admin");
-        die();
-    @endphp
-@endif
 @extends('adminlte::auth.auth-page', ['auth_type' => 'login'])
 
 @section('adminlte_css_pre')

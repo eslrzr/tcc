@@ -51,7 +51,10 @@ class AuthController extends Controller {
         $fields['password'] = Hash::make($fields['password']);
 
         try {
-            User::create($fields);
+            $user = User::create($fields);
+            if ($user) {
+                redirect()->back()->with('success', Lang::get('general.create_user_success'));
+            }
         } catch (\Throwable $th) {
             SystemLog::create([
                 'type' => 'error',
@@ -64,5 +67,13 @@ class AuthController extends Controller {
                 // 'email' => Lang::get('general.erro_acao', ['attribute' => 'email']),
             ]);
         }
+    }
+
+    /**
+     * Returns if the user is logged in
+     * @return bool
+     */
+    public function isLoggedIn(): bool {
+        return auth()->check();
     }
 }
