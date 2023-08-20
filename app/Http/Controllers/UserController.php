@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdministrationType;
+use App\Models\SystemLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 
@@ -100,5 +102,37 @@ class UserController extends Controller {
             'success' => true,
             'message' => Lang::get('alerts.status_changed_successfully')
         ]);
+    }
+
+    /**
+     * Create user account
+     * @return \Illuminate\Http\RedirectResponse - Redirect to the previous page with a success message
+    */
+    public function create() {
+        $fields = request()->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'confirmed'],
+            'administration_type_id' => ['required', 'exists:administration_types,id'],
+        ]);
+
+        $fields['password'] = Hash::make($fields['password']);
+
+        try {
+            $user = User::create($fields);
+            
+            if ($user) {
+                return redirect()->back()->with('success', Lang::get('form.create_user_success'));
+            }
+        } catch (\Throwable $th) {
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'register',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('form.create_user_error'));
+        }
     }
 }

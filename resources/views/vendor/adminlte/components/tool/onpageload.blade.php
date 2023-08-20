@@ -3,6 +3,7 @@
         // Call the function on page load to check if user is logged in
         $(() => {
             checkUserLoggedIn();
+            checkReturnMessages();
         });
         
         setInterval(function () {
@@ -21,6 +22,27 @@
                     }
                 }
             });
+        }
+
+        // Function to check if there is any return message
+        function checkReturnMessages() {
+            if ("{{ session()->has('success') }}") {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: "{{ session()->get('success') }}",
+                    showConfirmButton: false,
+                    timer: 1200
+                })
+            } else if ("{{ session()->has('error') }}") {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: "{{ session()->get('error') }}",
+                    showConfirmButton: false,
+                    timer: 1200
+                })
+            }
         }
     </script>
 @endpush

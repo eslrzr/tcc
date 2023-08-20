@@ -15,6 +15,7 @@
             </div>
 
             <form action="{{ route($route) }}" method="POST">
+                @csrf
                 {{-- Modal body --}}
                 <div class="modal-body">
                     @include($slot, $slotData ?? [])

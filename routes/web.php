@@ -20,7 +20,6 @@ Route::get('/', [AuthController::class, 'loginView'])->name('loginView');
 
 // auth
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // admin
@@ -28,5 +27,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'view'])->name('users');
+        Route::post('/create', [UserController::class, 'create'])->name('createUser');
     });
 })->middleware('auth');

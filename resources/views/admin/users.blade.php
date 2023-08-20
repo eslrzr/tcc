@@ -38,7 +38,7 @@
     'icon' => 'fas fa-user-plus',
     'size' => 'modal-lg',
     'slot' => 'admin.users.create',
-    'route' => 'register',
+    'route' => 'createUser',
     'footer' => true,
 ])
 
@@ -86,3 +86,4 @@
         }
     </script>
 @stop
+@include('adminlte::components.tool.onpageload')

@@ -42,33 +42,6 @@ class AuthController extends Controller {
         return redirect('/');
     }
 
-    public function register() {
-        $fields = request()->validate([
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'confirmed'],
-        ]);
-
-        $fields['password'] = Hash::make($fields['password']);
-
-        try {
-            $user = User::create($fields);
-            if ($user) {
-                redirect()->back()->with('success', Lang::get('general.create_user_success'));
-            }
-        } catch (\Throwable $th) {
-            SystemLog::create([
-                'type' => 'error',
-                'action' => 'register',
-                'message' => $th->getMessage(),
-                'user_id' => Auth::id(),
-                'ip_address' => request()->ip(),
-            ]);
-            return back()->withErrors([
-                // 'email' => Lang::get('general.erro_acao', ['attribute' => 'email']),
-            ]);
-        }
-    }
-
     /**
      * Returns if the user is logged in
      * @return bool

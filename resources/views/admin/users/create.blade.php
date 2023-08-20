@@ -33,8 +33,20 @@
   </div>
   <div class="col-6">
     <div class="input-group mb-3">
+      <input type="password" name="password_confirmation" class="form-control" placeholder="{{ __('form.password_confirmation') }}">
+      <div class="input-group-append">
+        <div class="input-group-text">
+          <span class="fas fa-lock"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <div class="input-group mb-3">
       <div class="form-group">
-        <select class="form-control">
+        <select class="form-control" name="administration_type_id">
           @foreach($slotData as $administrationType)
             <option value="{{ $administrationType->id }}">{{ $administrationType->name }}</option>
           @endforeach
