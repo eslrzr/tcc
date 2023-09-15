@@ -23,7 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('admin')->group(function () {
     Route::prefix('users')->group(function () {
         Route::put('/{id}/status', [UserController::class, 'changeStatus'])->name('changeStatus');
-        Route::post('/{id}/update', [UserController::class, 'update'])->name('updateUser');
     });
 })->middleware('auth');
 

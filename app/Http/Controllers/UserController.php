@@ -17,7 +17,7 @@ class UserController extends Controller {
      * Build the view with the users list
      * @return \Illuminate\Contracts\View\View
      */
-    public function view() {
+    public function view() : \Illuminate\Contracts\View\View {
         $users = User::select('users.id', 'users.name', 'users.email', 'administration_types.name as administration_type', 'users.created_at', 'users.status')
             ->where('users.id', '!=', Auth::user()->id)
             ->join('administration_types', 'administration_types.id', '=', 'users.administration_type_id')
@@ -27,15 +27,17 @@ class UserController extends Controller {
             $checked = $user->status ? 'checked' : '';
             $user->actions = [
                 'buttons' => [
-                    'html' => '<input type="checkbox" name="status" '. $checked .' data-bootstrap-switch data-off-color="danger" data-on-color="success" value="' . $user->id . '">',
-                    'route' => 'changeStatus',
+                    [
+                        'html' => '<input type="checkbox" name="status" '. $checked .' data-bootstrap-switch data-off-color="danger" data-on-color="success" value="' . $user->id . '">',
+                        'route' => 'changeStatus',
+                    ],
                 ],
             ];
         }
 
         $administrationTypes = AdministrationType::select('id', 'name')->get();
         
-        return view('admin.users',
+        return view('admin.users.index',
         [
             'language' => $this->localeKey(),
             'data' => $users,
@@ -44,33 +46,33 @@ class UserController extends Controller {
             'heads' => [
                 'id' => [
                     'classes' => 'text-center',
-                    'width' => 10,
-                    'label' => 'ID'
+                    'width' => 5,
+                    'label' => Lang::get('form.id'),
                 ],
                 'name' => [
                     'classes' => 'text-center',
                     'width' => 30,
-                    'label' => 'Nome'
+                    'label' => Lang::get('form.name'),
                 ],
                 'email' => [
                     'classes' => 'text-center',
                     'width' => 30,
-                    'label' => 'E-mail'
+                    'label' => Lang::get('form.email'),
                 ],
                 'administration_type' => [
                     'classes' => 'text-center',
                     'width' => 15,
-                    'label' => 'Tipo de usuário'
+                    'label' => Lang::get('form.administration_type'),
                 ],
                 'created_at' => [
                     'classes' => 'text-center',
                     'width' => 15,
-                    'label' => 'Criado em'
+                    'label' => Lang::get('form.created_at'),
                 ],
                 'actions' => [
                     'classes' => 'text-center',
                     'width' => 10,
-                    'label' => 'Status'
+                    'label' => Lang::get('form.status'),
                 ],
             ],
         ]);
@@ -122,7 +124,7 @@ class UserController extends Controller {
             $user = User::create($fields);
             
             if ($user) {
-                return redirect()->back()->with('success', Lang::get('form.create_user_success'));
+                return redirect()->back()->with('success', Lang::get('alerts.create_user_success'));
             }
         } catch (\Throwable $th) {
             SystemLog::create([
@@ -132,7 +134,7 @@ class UserController extends Controller {
                 'user_id' => Auth::id(),
                 'ip_address' => request()->ip(),
             ]);
-            return redirect()->back()->with('error', Lang::get('form.create_user_error'));
+            return redirect()->back()->with('error', Lang::get('alerts.create_user_error'));
         }
     }
 }

@@ -330,6 +330,11 @@ return [
             'url' => 'admin/documents',
             'icon' => 'fas fa-fw fa-file',
         ],
+        [
+            'text' => 'employees',
+            'url' => 'admin/employees',
+            'icon' => 'fas fa-fw fa-user-tie',
+        ],
         // [
         //     'text' => 'cadastro',
         //     'icon' => 'fas fa-fw fa-plus',
@@ -511,6 +516,17 @@ return [
                     'asset' => false,
                     'location' =>
                         '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'iCheck' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' =>
+                        'vendor/icheck-bootstrap/icheck-bootstrap.min.css',
                 ],
             ],
         ],

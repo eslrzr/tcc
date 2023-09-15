@@ -20,13 +20,17 @@
         @foreach($data as $item)
             <tr>
                 @foreach($heads as $th => $value)
-                    <td>
-                        @if ($th == 'actions')
-                            {!! $item->$th['buttons']['html'] !!}
-                        @else
-                            {{ $item->$th }}
-                        @endif
-                    </td>
+                    @if ($th == 'actions')
+                        <td class="text-center"> 
+                            @foreach ($item->$th['buttons'] as $button)
+                                {!! $button['html'] !!}
+                            @endforeach
+                        </td>
+                    @elseif ($th == 'process_status' || $th == 'work_status')
+                        <td class="text-center"> {!! $item->$th['html'] !!} </td>
+                    @else
+                        <td>  {{ $item->$th }} </td>
+                    @endif
                 @endforeach
             </tr>
         @endforeach

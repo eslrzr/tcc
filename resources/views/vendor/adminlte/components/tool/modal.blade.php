@@ -20,27 +20,29 @@
                 <div class="modal-body">
                     @include($slot, $slotData ?? [])
                 </div>
-
-                {{-- Modal footer --}}
-                <div class="modal-footer">
-                    <div class="mr-auto">
+                 
+                @if ($footer)
+                    {{-- Modal footer --}}
+                    <div class="modal-footer">
+                        <div class="mr-auto">
+                            @include('adminlte::components.form.button', [
+                                'type' => 'button',
+                                'label' => __('general.cancel'),
+                                'icon' => 'fas fa-times',
+                                'theme' => 'secondary',
+                                'attributes' => [
+                                    'data-dismiss' => 'modal',
+                                ],
+                            ])
+                        </div>
                         @include('adminlte::components.form.button', [
-                            'type' => 'button',
-                            'label' => __('general.cancel'),
-                            'icon' => 'fas fa-times',
-                            'theme' => 'secondary',
-                            'attributes' => [
-                                'data-dismiss' => 'modal',
-                            ],
+                            'type' => 'submit',
+                            'label' => __('general.save'),
+                            'icon' => 'fas fa-save',
+                            'theme' => 'primary',
                         ])
                     </div>
-                    @include('adminlte::components.form.button', [
-                        'type' => 'submit',
-                        'label' => __('general.save'),
-                        'icon' => 'fas fa-save',
-                        'theme' => 'primary',
-                    ])
-                </div>
+                @endif
             </form>
         </div>
     </div>

@@ -2,13 +2,13 @@
 
 @section('title', ' Empreiteira Andrades - Administração')
 @section('content_header')
-    <h1>@lang('general.users')</h1>
+    <h1>{{ trans_choice('general.users', 2) }}</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <p>@lang('general.users_list')</p>
+            <p>{{ __('general.users_list') }}</p>
         </div>
     </div>
     <div class="row">
