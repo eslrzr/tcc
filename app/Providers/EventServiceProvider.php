@@ -63,6 +63,10 @@ class EventServiceProvider extends ServiceProvider
         // TODO: Implement the next method to get the dark mode preference for the
         // current authenticated user. Usually this preference will be stored on a database,
         // it is your task to get it.
+        if (!auth()->check()) {
+            return;
+        }
+
         $user = User::find(auth()->user()->id);
         $darkModeCfg = $user->getDarkMode();
 
@@ -82,6 +86,10 @@ class EventServiceProvider extends ServiceProvider
      */
     public function handleDarkModeWasToggledEvt(DarkModeWasToggled $event)
     {
+        if (!auth()->check()) {
+            return;
+        }
+
         // Get the new dark mode preference (enabled or not).
         $darkModeCfg = $event->darkMode->isEnabled();
 

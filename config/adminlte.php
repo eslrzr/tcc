@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Lang;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +32,7 @@ return [
     */
 
     'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +64,7 @@ return [
     |
     */
 
-    'logo' => '',
+    'logo' => Lang::get('general.administration'),
     'logo_img' => 'vendor/adminlte/dist/img/logoBlack.png',
     'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
@@ -109,8 +111,8 @@ return [
         'enabled' => true,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/logoBlack.png',
-            'alt' => 'Carregando',
-            'effect' => 'animation__shake',
+            'alt' => Lang::get('general.loading'),
+            'effect' => 'animation_wobble',
             'width' => 130,
             'height' => 85,
         ],
@@ -130,7 +132,7 @@ return [
 
     'usermenu_enabled' => true,
     'usermenu_header' => true,
-    'usermenu_header_class' => 'bg-primary',
+    'usermenu_header_class' => 'bg-info',
     'usermenu_image' => false,
     'usermenu_desc' => false,
     'usermenu_profile_url' => false,
@@ -147,7 +149,7 @@ return [
     |
     */
 
-    'layout_topnav' => true,
+    'layout_topnav' => null,
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
@@ -191,10 +193,10 @@ return [
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
-    'classes_topnav_nav' => 'navbar-expand-lg',
+    'classes_topnav' => '',
+    'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
     /*
@@ -209,14 +211,14 @@ return [
     |
     */
 
-    'sidebar_mini' => 'lg',
+    'sidebar_mini' => 'xl',
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => true,
+    'sidebar_nav_accordion' => false,
     'sidebar_nav_animation_speed' => 300,
 
     /*
@@ -233,7 +235,7 @@ return [
 
     'right_sidebar' => false,
     'right_sidebar_icon' => 'fas fa-cogs',
-    'right_sidebar_theme' => 'dark',
+    'right_sidebar_theme' => 'light',
     'right_sidebar_slide' => true,
     'right_sidebar_push' => true,
     'right_sidebar_scrollbar_theme' => 'os-theme-light',
@@ -298,15 +300,15 @@ return [
             'type'         => 'darkmode-widget',
             'topnav_right' => true,
         ],
-        [
-            'type'         => 'navbar-search',
-            'text'         => 'search',        // Placeholder for the underlying input.
-            'topnav_right' => true,            // Or "topnav => true" to place on the left.
-            'url'          => 'navbar/search', // The url used to submit the data ('#' by default).
-            'method'       => 'post',          // 'get' or 'post' ('get' by default).
-            'input_name'   => 'search',
-            'id'           => 'navbarSearch'   // ID attribute for the underlying input (optional).
-        ],
+        // [
+        //     'type'         => 'navbar-search',
+        //     'text'         => 'search',        // Placeholder for the underlying input.
+        //     'topnav_right' => true,            // Or "topnav => true" to place on the left.
+        //     'url'          => 'navbar/search', // The url used to submit the data ('#' by default).
+        //     'method'       => 'post',          // 'get' or 'post' ('get' by default).
+        //     'input_name'   => 'search',
+        //     'id'           => 'navbarSearch'   // ID attribute for the underlying input (optional).
+        // ],
 
         // Usermenu items:
         [
@@ -318,27 +320,34 @@ return [
         ],
 
         // Sidebar items:
-        // [
-        //     'text' => 'blog',
-        //     'url' => 'admin/blog',
-        //     'can' => 'manage-blog',
-        // ],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
+            'text' => 'users',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
         ],
-        // ['header' => 'account_settings'],
+        [
+            'text' => 'documents',
+            'url' => 'admin/documents',
+            'icon' => 'fas fa-fw fa-file',
+        ],
+        [
+            'text' => 'employees',
+            'url' => 'admin/employees',
+            'icon' => 'fas fa-fw fa-user-tie',
+        ],
+        [
+            'text' => 'in_outs',
+            'url' => 'admin/cash',
+            'icon' => 'fas fa-fw fa-exchange-alt',
+        ],
+        [
+            'text' => 'services',
+            'url' => 'admin/services',
+            'icon' => 'fas fa-fw fa-wrench',
+        ],
         // [
-        //     'text' => 'profile',
-        //     'url' => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
-        // [
-        //     'text' => 'multilevel',
-        //     'icon' => 'fas fa-fw fa-share',
+        //     'text' => 'cadastro',
+        //     'icon' => 'fas fa-fw fa-plus',
         //     'submenu' => [
         //         [
         //             'text' => 'level_one',
@@ -373,6 +382,25 @@ return [
         //             'url' => '#',
         //         ],
         //     ],
+        // ],
+        // [
+        //     'text' => 'blog',
+        //     'url' => 'admin/blog',
+        //     'can' => 'manage-blog',
+        // ],
+        // [
+        //     'text' => 'pages',
+        //     'url' => 'admin/pages',
+        //     'icon' => 'far fa-fw fa-file',
+        //     'label' => 4,
+        //     'label_color' => 'success',
+        // ],
+
+        // ['header' => 'account_settings'],
+        // [
+        //     'text' => 'profile',
+        //     'url' => 'admin/settings',
+        //     'icon' => 'fas fa-fw fa-user',
         // ],
     ],
 
@@ -412,25 +440,37 @@ return [
 
     'plugins' => [
         'Datatables' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/jquery.dataTables.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/js/dataTables.bootstrap4.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/datatables/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'BootstrapSwitch' => [
             'active' => false,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' =>
-                        '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
-                ],
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' =>
-                        '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/js/bootstrap-switch.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => false,
-                    'location' =>
-                        '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css',
                 ],
             ],
         ],
@@ -463,12 +503,12 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'asset' => true,
+                    'location' => 'vendor/sweetalert2/sweetalert2.all.min.js',
                 ],
             ],
         ],
@@ -486,6 +526,17 @@ return [
                     'asset' => false,
                     'location' =>
                         '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'iCheck' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' =>
+                        'vendor/icheck-bootstrap/icheck-bootstrap.min.css',
                 ],
             ],
         ],

@@ -73,6 +73,8 @@
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
     @endif
 
+    {{-- jKanban --}}
+    <link href="{{ asset('vendor/jkanban/jkanban.min.css') }}" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="@yield('classes_body')" @yield('body_data')>
@@ -86,6 +88,7 @@
         <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
         <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
+        <script src="{{ asset('vendor/jkanban/jkanban.min.js') }}"></script>
     @else
         <script src="{{ mix(config('adminlte.laravel_mix_js_path', 'js/app.js')) }}"></script>
     @endif
@@ -104,7 +107,6 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
-
 </body>
 
 </html>

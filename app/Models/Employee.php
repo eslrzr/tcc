@@ -10,6 +10,9 @@ class Employee extends Model
 {
     use HasFactory;
 
+    public static $WORK_STATUS_ACTIVE = 'A';
+    public static $WORK_STATUS_INACTIVE = 'D';
+
     /**
      * The attributes that are mass assignable.
      *

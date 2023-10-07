@@ -8,4 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class EmployeeRole extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
+    * Get the employees for the role.
+    */
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
