@@ -9,6 +9,7 @@ return [
     'edit' => 'Editar',
     'remove' => 'Excluir',
     'add' => 'Adicionar',
+    'withdraw' => 'Retirar',
     'new' => 'Novo',
     
     'create' => 'Criar',
@@ -26,7 +27,15 @@ return [
     'administration' => 'Administração',
     'indicators' => 'Indicadores',
     'operation_indicators' => 'Indicadores de Operação',
-    'in_out' => 'Entradas e Saídas',
+
+    'cash' => 'Caixa',
+    'add_cash' => 'Adicionar ao caixa',
+    'withdraw_cash' => 'Retirar do caixa',
+    'update_cash' => 'Atualizar caixa',
+    'in_outs' => 'Entradas e Saídas',
+    'in_outs_list' => 'Lista de entradas e saídas do caixa',
+    'add_in_out_event' => 'Registrar evento',
+    'money_in_cash' => 'Dinheiro em caixa',
     
     'employees' => 'Funcionário|Funcionários',
     'employees_list' => 'Lista de funcionários do sistema',
@@ -36,5 +45,12 @@ return [
     'shift_employee' => 'Escala de trabalho do funcionário',
     
     'services' => 'Serviço|Serviços',
-    
+    'services_list' => 'Lista de serviços do sistema',
+    'create_service' => 'Criar serviço',
+    'update_service' => 'Atualizar serviço',
+    'services_projects' => 'Projetos do serviço',
+    'services_projects_info' => 'Planejamento de projetos do serviço',
+
+    'projects' => 'Projeto|Projetos',
+    'delete_project' => 'Excluir projeto',
 ];

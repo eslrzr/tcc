@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,8 +22,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('admin')->group(function () {
+    // users
     Route::prefix('users')->group(function () {
         Route::put('/{id}/status', [UserController::class, 'changeStatus'])->name('changeStatus');
+    });
+    // projects
+    Route::prefix('projects')->group(function () {
+        Route::post('/create', [ProjectController::class, 'create'])->name('createProject');
+        Route::post('/update', [ProjectController::class, 'update'])->name('updateProject');
     });
 })->middleware('auth');
 

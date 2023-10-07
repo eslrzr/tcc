@@ -14,7 +14,7 @@
                 </button>
             </div>
 
-            <form action="{{ route($route) }}" method="POST">
+            <form action="{{ route($route) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 {{-- Modal body --}}
                 <div class="modal-body">
@@ -40,6 +40,28 @@
                             'label' => __('general.save'),
                             'icon' => 'fas fa-save',
                             'theme' => 'primary',
+                        ])
+                    </div>
+                @endif
+                @if ($deleteFooter)
+                    {{-- Modal footer --}}
+                    <div class="modal-footer">
+                        <div class="mr-auto">
+                            @include('adminlte::components.form.button', [
+                                'type' => 'button',
+                                'label' => __('general.cancel'),
+                                'icon' => 'fas fa-times',
+                                'theme' => 'secondary',
+                                'attributes' => [
+                                    'data-dismiss' => 'modal',
+                                ],
+                            ])
+                        </div>
+                        @include('adminlte::components.form.button', [
+                            'type' => 'submit',
+                            'label' => __('general.remove'),
+                            'icon' => 'fas fa-trash',
+                            'theme' => 'danger',
                         ])
                     </div>
                 @endif

@@ -40,10 +40,11 @@
     'slot' => 'admin.users.create',
     'route' => 'createUser',
     'footer' => true,
+    'deleteFooter' => false,
 ])
 
 @section('plugins.BootstrapSwitch', true)
-@section('js')
+@push('js')
     <script>
         $('input[data-bootstrap-switch]').each(function() {
             $(this).bootstrapSwitch('state', $(this).prop('checked'));
@@ -85,5 +86,5 @@
             });
         }
     </script>
-@stop
+@endpush
 @include('adminlte::components.tool.onpageload')

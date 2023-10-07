@@ -12557,6 +12557,11 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
   height: 100vh;
   overflow-y: hidden;
   z-index: 1038;
+  background-color: #fff;
+}
+
+.dark-mode .main-sidebar {
+  background-color: #0a0c10 !important;
 }
 
 .main-sidebar a:-moz-focusring {

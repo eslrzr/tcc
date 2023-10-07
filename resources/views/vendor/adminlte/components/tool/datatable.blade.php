@@ -26,10 +26,10 @@
                                 {!! $button['html'] !!}
                             @endforeach
                         </td>
-                    @elseif ($th == 'process_status' || $th == 'work_status')
+                    @elseif ($th == 'process_status' || $th == 'work_status' || $th == 'type')
                         <td class="text-center"> {!! $item->$th['html'] !!} </td>
                     @else
-                        <td>  {{ $item->$th }} </td>
+                        <td class="text-center">  {{ $item->$th }} </td>
                     @endif
                 @endforeach
             </tr>

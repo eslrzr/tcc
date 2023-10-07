@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class DocumentController extends Controller {
-    
+
     /**
      * Build the view with the documents list
      * @return \Illuminate\Contracts\View\View
@@ -59,12 +59,10 @@ class DocumentController extends Controller {
             $document->actions = [
                 'buttons' => [
                     [
-                        'html' => '<a href="' . Storage::url($document->path) . '" target="_blank" class="btn btn-secondary btn-sm"><i class="fas fa-eye"></i></a>',
-                        'route' => 'viewDocument',
+                        'html' => '<a href="' . Storage::url($document->path) . '" target="_blank" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>',
                     ],
                     [
                         'html' => '<a href="' . Storage::url($document->path) . '" download class="btn btn-info btn-sm"><i class="fas fa-download"></i></a>',
-                        'route' => 'downloadDocument',
                     ],
                     [
                         'html' => '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal' . $document->id . '" data-id="' . $document->id . '"><i class="fas fa-edit"></i></button>',
@@ -81,7 +79,7 @@ class DocumentController extends Controller {
         return view('admin.documents.index', [
             'language' => $this->localeKey(),
             'data' => $documents,
-            'slotDataDocument' => $documentTypes,
+            'slotData' => $documentTypes,
             'id' => 'documents-list',
             'heads' => [
                 'id' => [
@@ -122,8 +120,8 @@ class DocumentController extends Controller {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'document_type_id' => 'required|integer|exists:document_types,id',
-            'file' => 'file|mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:2048',
-            'linked_to' => 'required|integer',
+            'file' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,docx,xls,xlsx,ppt,pptx,txt|max:2048',
+            'linked_to' => 'required|string|in:E,S',
             'employee_id' => 'integer|exists:employees,id',
             'service_id' => 'integer|exists:services,id',
         ]);
@@ -156,13 +154,18 @@ class DocumentController extends Controller {
                 break;
         }
 
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store('public/documents');
+        }
+
         DB::beginTransaction();
         try {
+            $request->file('file')->store('documents');
             $document = new Document();
             $document->name = $request->name;
+            $document->path = $path ?? null;
+            $document->document_type_id = $request->document_type_id;
             $document->user_id = Auth::user()->id;
-            $path = $request->file('document')->store('documents');
-            $document->path = $path;
             $document->save();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -176,10 +179,7 @@ class DocumentController extends Controller {
             return redirect()->back()->withErrors(Lang::get('alerts.create_document_error'));
         }
 
-        if (DB::commit()) {
-            return redirect()->back()->with('success', Lang::get('alerts.create_document_success'));
-        }
-
-        return redirect()->back()->withErrors(Lang::get('alerts.create_document_error'));
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.create_document_success'));
     }
 }

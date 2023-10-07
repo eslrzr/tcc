@@ -112,7 +112,7 @@ return [
         'img' => [
             'path' => 'vendor/adminlte/dist/img/logoBlack.png',
             'alt' => Lang::get('general.loading'),
-            'effect' => 'animation__shake',
+            'effect' => 'animation_wobble',
             'width' => 130,
             'height' => 85,
         ],
@@ -196,7 +196,7 @@ return [
     'classes_sidebar' => 'elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => '',
-    'classes_topnav_nav' => 'text-white navbar-expand-lg',
+    'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
     /*
@@ -334,6 +334,16 @@ return [
             'text' => 'employees',
             'url' => 'admin/employees',
             'icon' => 'fas fa-fw fa-user-tie',
+        ],
+        [
+            'text' => 'in_outs',
+            'url' => 'admin/cash',
+            'icon' => 'fas fa-fw fa-exchange-alt',
+        ],
+        [
+            'text' => 'services',
+            'url' => 'admin/services',
+            'icon' => 'fas fa-fw fa-wrench',
         ],
         // [
         //     'text' => 'cadastro',

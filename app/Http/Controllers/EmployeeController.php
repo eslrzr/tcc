@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeeController extends Controller
-{
+class EmployeeController extends Controller {   
+
     /**
      * Build the view with the employees list
      * 
@@ -44,7 +44,7 @@ class EmployeeController extends Controller
             $employee->actions = [
                 'buttons' => [
                     [
-                        'html' => '<button title="Informações" type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#viewModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-eye"></i></button>',
+                        'html' => '<button title="Informações" type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#viewModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-eye"></i></button>',
                     ],
                     [
                         'html' => '<button title="Editar" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-edit"></i></button>',

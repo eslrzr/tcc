@@ -79,6 +79,20 @@ class UserController extends Controller {
     }
 
     /**
+     * Build the user settings view
+     * @return \Illuminate\Contracts\View\View
+     */
+     public function settingsView() : \Illuminate\Contracts\View\View {
+        $user = User::find(Auth::id());
+        $administrationTypes = AdministrationType::select('id', 'name')->get();
+
+        return view('admin.settings.index', [
+            'data' => $user,
+            'slotData' => $administrationTypes,
+        ]);
+     }
+
+    /**
      * Change the user status
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse

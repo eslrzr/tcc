@@ -14,7 +14,7 @@ return [
     'number' => 'Número',
     'phone_number' => 'Número de telefone',
     'birth_date' => 'Data de nascimento',
-    'salary' => 'Salário',
+    'salary' => 'Salário por dia',
     'complement' => 'Complemento',
     'neighborhood' => 'Bairro',
     'city' => 'Cidade',
@@ -23,10 +23,16 @@ return [
     'status' => 'Status',
     'actions' => 'Ações',
     'optional' => '(Opcional)',
+    'date' => 'Data',
+    'description' => 'Descrição',
+    'value' => 'Valor',
+    'type' => 'Tipo',
     
     'id' => 'ID',
     'created_at' => 'Criado em',
     'updated_at' => 'Atualizado em',
+    'start_date' => 'Data de início',
+    'end_date' => 'Data de término',
 
     'administration_type' => 'Tipo de usuário',
 
@@ -41,6 +47,8 @@ return [
 
     'active' => 'Ativo',
     'inactive' => 'Inativo',
+    'in' => 'Entrada',
+    'out' => 'Saída',
 
     'work_status' => 'Status de trabalho',
     'role' => 'Função',

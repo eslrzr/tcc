@@ -20,4 +20,6 @@ return [
     'documents' => 'Documentos',
     'users' => 'Usuários',
     'employees' => 'Funcionários',
+    'services' => 'Serviços',
+    'in_outs' => 'Entradas e Saídas',
 ];

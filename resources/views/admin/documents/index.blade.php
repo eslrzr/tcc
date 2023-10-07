@@ -40,6 +40,7 @@
     'slot' => 'admin.documents.create',
     'route' => 'createDocument',
     'footer' => true,
+    'deleteFooter' => false,
 ])
 
 @section('plugins.BootstrapSwitch', true)
