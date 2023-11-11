@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
 use App\Models\Project;
+use App\Models\Service;
 use App\Models\SystemLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -191,5 +193,105 @@ class ProjectController extends Controller
 
         DB::commit();
         return redirect()->back()->with('success', Lang::get('alerts.delete_project_success'));
+    }
+
+    /**
+     * Upload images to project
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImages(Request $request) : JsonResponse {
+        $validator = Validator::make(request()->all(), [
+            'id' => 'required|integer|exists:projects,id',
+            'image' => 'required|array',
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => Lang::get('alerts.upload_images_project_error'),
+            ]);
+        }
+
+        $project = Project::find($request->id);
+        $service = Service::find($project->service_id);
+        $basePath = $service->id . '/projects/' . $project->id;
+
+        DB::beginTransaction();
+        try {
+            foreach ($request->image as $image) {
+                $path = $image->store($basePath);
+                $media = new Media;
+                $media->name = $image->getClientOriginalName();
+                $media->path = $path;
+                $media->type = $image->extension();
+                $media->size = $image->getSize();
+                $media->project_id = $project->id;
+                $media->save();
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'upload_images_project',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => Lang::get('alerts.upload_images_project_error'),
+            ]);
+        }
+
+        DB::commit();
+        return response()->json([
+            'success' => true,
+            'message' => Lang::get('alerts.upload_images_project_success'),
+        ]);
+    }
+
+    /**
+     * Delete an image from project
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteImage(Request $request) : RedirectResponse {
+        $validator = Validator::make(request()->all(), [
+            'id' => 'required|integer|exists:medias,id',
+        ]);
+
+        if ($validator->fails()) {
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'delete_image_project',
+                'message' => $validator->errors()->first(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.delete_image_project_error'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $media = Media::find($request->id);
+            $path = storage_path($media->path);
+            if (unlink($path)) {
+                $media->delete();
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'delete_image_project',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.delete_image_project_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.delete_image_project_success'));
     }
 }

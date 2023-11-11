@@ -36,11 +36,15 @@ Route::middleware(['auth.check'])->group(function () {
         Route::prefix('users')->group(function () {
             Route::get('/', [UserController::class, 'view'])->name('users');
             Route::post('/create', [UserController::class, 'create'])->name('createUser');
+            Route::post('/settings/change-password', [AuthController::class, 'changePassword'])->name('changePassword');
         });
         // documents
         Route::prefix('documents')->group(function () {
             Route::get('/', [DocumentController::class, 'view'])->name('documents');
+            Route::get('/management', [DocumentController::class, 'managementView'])->name('managementView');
             Route::post('/create', [DocumentController::class, 'create'])->name('createDocument');
+            // Route::post('/update', [DocumentController::class, 'update'])->name('updateDocument');
+            // Route::post('/delete', [DocumentController::class, 'delete'])->name('deleteDocument');
         });
         // employees
         Route::prefix('employees')->group(function () {
@@ -49,6 +53,8 @@ Route::middleware(['auth.check'])->group(function () {
             Route::get('/view', [EmployeeController::class, 'info'])->name('viewEmployee');
             Route::post('/create', [EmployeeController::class, 'create'])->name('createEmployee');
             Route::post('/update', [EmployeeController::class, 'update'])->name('updateEmployee');
+            Route::post('/delete', [EmployeeController::class, 'delete'])->name('deleteEmployee');
+
             // shift
             Route::prefix('shift')->group(function () {
                 Route::post('/', [EmployeeController::class, 'shift'])->name('shiftEmployee');
@@ -63,9 +69,13 @@ Route::middleware(['auth.check'])->group(function () {
             Route::get('/all', [ServiceController::class, 'all'])->name('servicesAll');
             Route::post('/create', [ServiceController::class, 'create'])->name('createService');
             Route::get('/{id}', [ServiceController::class, 'viewOnce'])->name('viewService');
+            Route::post('/update', [ServiceController::class, 'update'])->name('updateService');
+            Route::post('/delete', [ServiceController::class, 'delete'])->name('deleteService');
+            Route::post('/finish', [ServiceController::class, 'finish'])->name('finishService');
         });
         // projects
         Route::prefix('projects')->group(function () {
+            Route::post('/upload-images', [ProjectController::class, 'uploadImages'])->name('imageProject');
             Route::post('/delete', [ProjectController::class, 'delete'])->name('deleteProject');
         });
         // cash

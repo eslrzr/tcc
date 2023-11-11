@@ -20,11 +20,11 @@ class Address extends Model
         'number',
         'city',
         'state',
-        'country',
+        'district',
         'zip_code',
         'formatted_address',
         'employee_id',
-        'project_id',
+        'service_id',
     ];
 
     /**
@@ -42,7 +42,4 @@ class Address extends Model
     {
         return $this->belongsTo(Project::class);
     }
-
-
-
 }

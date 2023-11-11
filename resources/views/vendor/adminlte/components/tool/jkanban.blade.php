@@ -1,91 +1,77 @@
-<style>
-    body {
-      font-family: "Lato";
-      margin: 0;
-      padding: 0;
-    }
-
-    #myKanban {
-      overflow-x: auto;
-      padding: 20px 0;
-    }
-
-    .success {
-      background: #00b961;
-    }
-
-    .info {
-      background: #2a92bf;
-    }
-
-    .warning {
-      background: #f4ce46;
-    }
-
-    .error {
-      background: #fb7d44;
-    }
-
-    .custom-button {
-      background-color: #4CAF50;
-      border: none;
-      color: white;
-      padding: 7px 15px;
-      margin: 10px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-    }      
-</style>
-<div id="kanban"></div>
+<div id='kanban'></div>
 @push('js')
 <script>
     var projects = {!! json_encode($projects) !!};
     var kanban = new jKanban({
-      element: "#kanban",
-      gutter: "10px",
-      widthBoard: "350px",
+      element: '#kanban',
+      gutter: '10px',
+      widthBoard: '350px',
       itemHandleOptions:{
         enabled: true,
       },
       dropEl: function(el, target, source, sibling){
         $.ajax({
-            url: "{{ route('updateProject') }}",
-            type: "POST",
-            dataType: "json",
+            url: '{{ route('updateProject') }}',
+            type: 'POST',
+            dataType: 'json',
             data: {
                 id: el.getAttribute('data-eid'),
                 process_status: target.parentElement.getAttribute('data-id'),
             },
             success: function(response) {
                 if (response.success) {
-                  Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: response.message,
-                        showConfirmButton: false,
-                        timer: 1200
-                    })
+                  showToastMessage(true, response.message);
+
+                  setTimeout(function(){
+                    var finished = true;
+                    var projects = document.querySelectorAll('.kanban-item');
+                    projects.forEach(function(project) {
+                      if (project.offsetParent.getAttribute('data-id') != '_done') {
+                        finished = false;
+                      }
+                    });
+                    if (!finished) {
+                      $('#finish-service').hide(500);
+                    } else {
+                      $('#finish-service').show(500);
+                    }
+                  }, 1200);
                 } else {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: response.message,
-                        showConfirmButton: false,
-                        timer: 1200
-                    })
+                  showToastMessage(false, response.message);
                 }
             }
         });
       },
       buttonClick: function(el, boardId) {
-        var formItem = document.createElement("form");
-        formItem.setAttribute("class", "itemform");
-        formItem.innerHTML =
-          '<div class="form-group"><textarea class="form-control" rows="2" autofocus></textarea></div><div class="form-group"><button type="submit" class="btn btn-primary btn-xs pull-right">Submit</button><button type="button" id="CancelBtn" class="btn btn-default btn-xs pull-right">Cancel</button></div>';
+        var formItem = document.createElement('form');
+        formItem.className = 'itemform';
+        var formGroupInput = document.createElement('div');
+        formGroupInput.className = 'form-group';
+        var inputText = document.createElement('input');
+        inputText.type = 'text';
+        inputText.className = 'form-control';
+        inputText.autofocus = true;
+        inputText.setAttribute('placeholder', '{{ __('kanban.enter_a_title') }}');
+        inputText.setAttribute('required', true);
+        formGroupInput.appendChild(inputText);
+        var formGroupButtons = document.createElement('div');
+        formGroupButtons.className = 'form-group';
+        var submitButton = document.createElement('button');
+        submitButton.type = 'submit';
+        submitButton.className = 'btn btn-success btn-xs pull-right';
+        submitButton.textContent = '{{ __('kanban.add') }}';
+        var cancelButton = document.createElement('button');
+        cancelButton.type = 'button';
+        cancelButton.id = 'btn-cancel';
+        cancelButton.className = 'btn btn-danger btn-xs pull-right';
+        cancelButton.textContent = '{{ __('kanban.cancel') }}';
+        formGroupButtons.appendChild(submitButton);
+        formGroupButtons.appendChild(cancelButton);
+        formItem.appendChild(formGroupInput);
+        formItem.appendChild(formGroupButtons);
         kanban.addForm(boardId, formItem);
-        formItem.addEventListener("submit", function(e) {
+
+        formItem.addEventListener('submit', function(e) {
           e.preventDefault();
           var text = e.target[0].value;
           kanban.addElement(boardId, {
@@ -93,9 +79,9 @@
           });
           formItem.parentNode.removeChild(formItem);
           $.ajax({
-                url: "{{ route('createProject') }}",
-                type: "POST",
-                dataType: "json",
+                url: '{{ route('createProject') }}',
+                type: 'POST',
+                dataType: 'json',
                 data: {
                     service_id: {{ $service->id }},
                     name: text,
@@ -103,76 +89,68 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                      Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: response.message,
-                        showConfirmButton: false,
-                        timer: 1200
-                      })
+                      showToastMessage(true, response.message);
                       setTimeout(function(){
                         location.reload();
                       }, 1200);
                     } else {
-                        Swal.fire({
-                          position: 'top-end',
-                          icon: 'error',
-                          title: response.message,
-                          showConfirmButton: false,
-                          timer: 1200
-                        })
+                      showToastMessage(false, response.message);
                     }
                 }
             });
         });
-        document.getElementById("CancelBtn").onclick = function() {
+        document.getElementById('btn-cancel').onclick = function() {
           formItem.parentNode.removeChild(formItem);
         };
       },
       itemAddOptions: {
         enabled: true,
-        content: "+ {{ __('kanban.add_new_task') }}",
-        class: 'custom-button',
-        footer: true
+        content: '{{ __('kanban.add_new_task') }}',
+        class: 'btn btn-light btn-sm',
+        footer: false
       },
       boards: [
         {
-          id: "_todo",
-          title: "{{ __('kanban.to_do') }}",
-          class: "info,good",
-          dragTo: ["_working"],
+          id: '_todo',
+          title: '{{ __('kanban.to_do') }}',
+          class: 'kanban-card-header-secondary,text-white,d-flex,justify-content-between',
+          dragTo: ['_working'],
           item: []
         },
         {
-          id: "_working",
-          title: "{{ __('kanban.in_progress') }}",
-          class: "warning",
+          id: '_working',
+          title: '{{ __('kanban.in_progress') }}',
+          class: 'kanban-card-header-info,text-white,d-flex,justify-content-between',
           item: []
         },
         {
-          id: "_done",
-          title: "{{ __('kanban.done') }}",
-          class: "success",
-          dragTo: ["_working"],
+          id: '_done',
+          title: '{{ __('kanban.done') }}',
+          class: 'kanban-card-header-success,text-white,d-flex,justify-content-between',
+          dragTo: ['_working'],
           item: []
         }
       ]
     });
 
+    var finished = true;
     projects.forEach(function(project) {
       var boardId;
       switch (project.process_status) {
-        case "N":
-          boardId = "_todo";
+        case 'N':
+          boardId = '_todo';
+          finished = false;
           break;
-        case "A":
-          boardId = "_working";
+        case 'A':
+          boardId = '_working';
+          finished = false;
           break;
-        case "F":
-          boardId = "_done";
+        case 'F':
+          boardId = '_done';
           break;
         default:
-        boardId = "_todo";
+          boardId = '_todo';
+          finished = false;
           break;
       }
 
@@ -181,30 +159,33 @@
         title: project.name,
       };
       kanban.addElement(boardId, item);
-      var projectActions = document.getElementById("project-actions" + project.id);
-      projectActions.setAttribute("class", "ml-auto");
-      var button = document.createElement("button");
-      button.setAttribute("type", "button");
-      button.setAttribute("class", "btn btn-danger btn-sm");
-      button.setAttribute("data-toggle", "modal");
-      button.setAttribute("data-target", "#deleteModal" + project.id);
-      button.setAttribute("data-id", project.id);
-      var icon = document.createElement("i");
-      icon.setAttribute("class", "fas fa-trash");
-      button.appendChild(icon);
-      projectActions.appendChild(button);
+      var projectActions = document.getElementById('project-actions' + project.id);
+      projectActions.setAttribute('class', 'ml-auto');
+      var buttonDanger = document.createElement('button');
+      buttonDanger.setAttribute('type', 'button');
+      buttonDanger.setAttribute('class', 'btn btn-danger btn-sm');
+      buttonDanger.setAttribute('data-toggle', 'modal');
+      buttonDanger.setAttribute('data-target', '#deleteModal' + project.id);
+      buttonDanger.setAttribute('data-id', project.id);
+      var iconTrash = document.createElement('i');
+      iconTrash.setAttribute('class', 'fas fa-trash');
+      buttonDanger.appendChild(iconTrash);
+      var buttonInfo = document.createElement('button');
+      buttonInfo.setAttribute('type', 'button');
+      buttonInfo.setAttribute('class', 'btn btn-info btn-sm');
+      buttonInfo.setAttribute('data-toggle', 'modal');
+      buttonInfo.setAttribute('data-target', '#imageModal' + project.id);
+      buttonInfo.setAttribute('data-id', project.id);
+      var iconImage = document.createElement('i');
+      iconImage.setAttribute('class', 'fas fa-images');
+      buttonInfo.appendChild(iconImage);
+      projectActions.appendChild(buttonInfo);
+      projectActions.appendChild(buttonDanger);
     });
-
-    var removeElement = document.getElementById("removeElement");
-    removeElement.addEventListener("click", function() {
-      kanban.removeElement("_test_delete");
-    });
-
-    var allEle = kanban.getBoardElements("_todo");
-    allEle.forEach(function(item, index) {
-      //console.log(item);
-    });
-
-    // add buttons on project actions
+    if (!finished) {
+      $('#finish-service').hide();
+    } else {
+      $('#finish-service').show();
+    }
   </script>
 @endpush

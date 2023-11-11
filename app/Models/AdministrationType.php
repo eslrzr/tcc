@@ -17,4 +17,7 @@ class AdministrationType extends Model
     protected $fillable = [
         'name',
     ];
+
+    public static $TYPE_ADMIN = 1;
+    public static $TYPE_ACCOUNTANT = 2;
 }

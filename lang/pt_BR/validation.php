@@ -3,6 +3,9 @@
 return [
     'attributes' => [
         'password' => 'senha',
+        'password_confirmation' => 'confirmação de senha',
+        'old_password' => 'senha atual',
+        'old_password_confirmation' => 'confirmação de senha atual',
         'email' => 'e-mail',
         'name' => 'nome',
         'cpf' => 'CPF',

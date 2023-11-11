@@ -22,4 +22,6 @@ return [
     'employees' => 'Funcionários',
     'services' => 'Serviços',
     'in_outs' => 'Entradas e Saídas',
+    'documents_management' => 'Processar documentos',
+    'invoices' => 'Notas Fiscais',
 ];

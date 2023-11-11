@@ -21,6 +21,7 @@ return [
     'november' => 'Novembro',
     'december' => 'Dezembro',
 
+    'day' => 'Dia',
     'morning' => 'Manhã',
     'afternoon' => 'Tarde',
     'night' => 'Noite',

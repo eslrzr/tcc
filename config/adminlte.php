@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'logo' => Lang::get('general.administration'),
+    'logo' => Lang::get('general.start'),
     'logo_img' => 'vendor/adminlte/dist/img/logoBlack.png',
     'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
@@ -293,10 +293,6 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-        [
             'type'         => 'darkmode-widget',
             'topnav_right' => true,
         ],
@@ -321,29 +317,34 @@ return [
 
         // Sidebar items:
         [
-            'text' => 'users',
-            'url' => 'admin/users',
-            'icon' => 'fas fa-fw fa-users',
-        ],
-        [
+            'key'  => 'documents',
             'text' => 'documents',
             'url' => 'admin/documents',
             'icon' => 'fas fa-fw fa-file',
         ],
         [
-            'text' => 'employees',
-            'url' => 'admin/employees',
-            'icon' => 'fas fa-fw fa-user-tie',
-        ],
-        [
+            'key'  => 'in_outs',
             'text' => 'in_outs',
             'url' => 'admin/cash',
             'icon' => 'fas fa-fw fa-exchange-alt',
         ],
         [
+            'key'  => 'employees',
+            'text' => 'employees',
+            'url' => 'admin/employees',
+            'icon' => 'fas fa-fw fa-user-tie',
+        ],
+        [
+            'key'  => 'services',
             'text' => 'services',
             'url' => 'admin/services',
             'icon' => 'fas fa-fw fa-wrench',
+        ],
+        [
+            'key'  => 'users',
+            'text' => 'users',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
         ],
         // [
         //     'text' => 'cadastro',

@@ -550,6 +550,30 @@ pre code {
   overflow-y: scroll;
 }
 
+.kanban-card-header-success {
+  background: #28a745;
+}
+
+.kanban-card-header-info {
+  background: #17a2b8;
+}
+
+.kanban-card-header-secondary {
+  background: #6c757d;
+}
+
+.dark-mode .kanban-card-header-success {
+  background: #00bc8c;
+}
+
+.dark-mode .kanban-card-header-info {
+  background: #3498db;
+}
+
+.dark-mode .kanban-card-header-secondary {
+  background: #6c757d;
+}
+
 .container,
 .container-fluid,
 .container-sm,
@@ -3438,9 +3462,15 @@ input[type="button"].btn-block {
 }
 
 .dropdown-item.active, .dropdown-item:active {
-  color: #fff;
+  color: #fff !important;
   text-decoration: none;
   background-color: #007bff;
+}
+
+.dark-mode .dropdown-item.active, .dropdown-item:active {
+  color: #fff !important;
+  text-decoration: none;
+  background-color: #3f6791 !important;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -5615,6 +5645,10 @@ a.badge-dark:focus, a.badge-dark.focus {
   padding: 0.75rem 1.25rem;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.dark-mode .list-group-item {
+  background-color: #343a40;
 }
 
 .list-group-item:first-child {
@@ -53081,3 +53115,30 @@ a.text-muted:hover {
   border-color: #4b545c !important;
 }
 /*# sourceMappingURL=adminlte.css.map */
+
+/* Skeleton loading classes */
+.skeleton {
+  background-color: #e6e6e6;
+  background-image: linear-gradient(90deg, #e6e6e6, #f5f5f5, #e6e6e6);
+  background-size: 200px 100%;
+  background-repeat: no-repeat;
+  border-radius: 4px;
+  display: inline-block;
+  line-height: 1;
+  position: relative;
+  -webkit-animation: pulse 1.25s ease-in-out 0.5s infinite;
+  animation: pulse 1.25s ease-in-out 0.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 0.7rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.skeleton-text-body {
+  width: 75%;
+}

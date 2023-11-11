@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cash;
 use App\Models\Employee;
 use App\Models\EmployeeRole;
+use App\Models\InOut;
+use App\Models\Payment;
 use App\Models\SystemLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -229,5 +232,94 @@ class EmployeeController extends Controller {
 
         DB::commit();
         return redirect()->back()->with('success', Lang::get('alerts.update_employee_success'));
+    }
+
+    /**
+     * Delete an employee
+     * 
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function delete(Request $request) : RedirectResponse {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:employees,id',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        DB::beginTransaction();
+        try {
+            $employee = Employee::find($request->id);
+            $employee->delete();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'delete_employee',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->withErrors(Lang::get('alerts.delete_employee_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.delete_employee_success'));
+
+    }
+
+    /**
+     * Confirm employee payment
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function confirmPayment(Request $request) : JsonResponse {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|integer|exists:payments,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        DB::beginTransaction();
+        try {
+            $payment = Payment::find($request->id);
+            $name = 'Pagamento para ' . $payment->employee->name;
+            $inOut = CashController::registerInOut($name, InOut::$TYPE_OUT, $payment->value);
+            if ($inOut == 'alerts.value_greater_than_cash' || $inOut == 'alerts.in_out_register_error') {
+                return response()->json([
+                    'success' => false,
+                    'message' => Lang::get($inOut)
+                ]);
+            }
+            $payment->status = Payment::$STATUS_PAID;
+            $payment->save();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'confirm_payment',
+                'message' => $th->getMessage(),
+                'user_id' => 999,
+                'ip_address' => request()->ip(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => Lang::get('alerts.confirm_payment_error')
+            ]);
+        }
+
+        DB::commit();
+        return response()->json([
+            'success' => true,
+            'message' => Lang::get('alerts.confirm_payment_success')
+        ]);
     }
 }

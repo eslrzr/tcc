@@ -41,7 +41,6 @@
 
             // Notify the server. The server will be in charge to persist
             // the dark mode configuration over multiple request.
-
             const fetchCfg = {
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 method: 'POST',
@@ -50,13 +49,20 @@
             fetch(
                 "{{ route('adminlte.darkmode.toggle') }}",
                 fetchCfg
-            )
-            .catch((error) => {
+            ).then((response) => {
+                console.log(response);
+            }).catch((error) => {
                 console.log(
                     'Failed to notify server that dark mode was toggled',
                     error
                 );
             });
+
+            if ({{ auth()->user()->dark_mode }}) {
+                localStorage.setItem('darkmode', true);
+            } else {
+                localStorage.setItem('darkmode', false);
+            }
         });
     })
 

@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -28,21 +29,24 @@ class Service extends Model
      */
     protected $hidden = [
         'updated_at',
+        'deleted_at',
     ];
 
     /**
      * Get the documents for the service.
      */
-    public function documents()
-    {
+    public function documents() {
         return $this->hasMany(Document::class);
     }
 
     /**
      * Get the projects for the service.
      */
-    public function projects()
-    {
+    public function projects() {
         return $this->hasMany(Project::class);
+    }
+
+    public function address() {
+        return $this->hasOne(Address::class);
     }
 }

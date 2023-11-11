@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
+use App\Models\Project;
 use App\Models\Service;
 use App\Models\SystemLog;
 use Illuminate\Http\JsonResponse;
@@ -10,10 +12,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    /**
+     * Returns all services in JSON format
+     * @return JsonResponse
+     */
+    public function all() : JsonResponse {
+        $services = Service::all([
+            'id', 
+            'name'
+        ]);
+
+        return response()->json($services);
+    }
 
     /**
      * Build the view with the services list
@@ -27,10 +43,13 @@ class ServiceController extends Controller
             $service->actions = [
                 'buttons' => [
                     [
-                        'html' => '<a href="/admin/services/'. $service->id .'" target="_blank" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>',
+                        'html' => '<a href="/admin/services/'. $service->id .'" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>',
                     ],
                     [
                         'html' => '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal' . $service->id . '" data-id="' . $service->id . '"><i class="fas fa-edit"></i></button>',
+                    ],
+                    [
+                        'html' => '<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal' . $service->id . '" data-id="' . $service->id . '"><i class="fas fa-trash"></i></button>',
                     ],
                 ],
             ];
@@ -88,6 +107,9 @@ class ServiceController extends Controller
         }
 
         $projects = $service->projects()->get();
+        foreach ($projects as $project) {
+            $project->name = Str::limit($project->name, Project::$STRING_LIMIT, '...');
+        }
 
         return view('admin.services.service', [
             'language' => $this->localeKey(),
@@ -106,6 +128,12 @@ class ServiceController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'start_date' => ['required', 'date'],
+            'zip_code' => ['required', 'string', 'max:8'],
+            'street' => ['required', 'string', 'max:255'],
+            'number' => ['required', 'numeric'],
+            'district' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'uf' => ['required', 'string', 'max:2'],
         ]);
 
         if ($validator->fails()) {
@@ -114,13 +142,27 @@ class ServiceController extends Controller
 
         DB::beginTransaction();
         try {
-            $service = new Service();
-            $service->name = $request->name;
-            $service->description = $request->description;
-            $service->start_date = $request->start_date;
-            $service->save();
+            $service = Service::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+            ]);
+            Address::create([
+                'zip_code' => $request->zip_code,
+                'street' => $request->street,
+                'number' => $request->number,
+                'district' => $request->district,
+                'city' => $request->city,
+                'state' => $request->uf,
+                'formatted_address' => $request->street . ', ' . $request->number . ' - ' . $request->city . ' - ' . $request->uf,
+                'service_id' => $service->id,
+            ]);
+            Storage::makeDirectory($service->id);
+            Storage::makeDirectory($service->id . '/projects');
+            Storage::makeDirectory($service->id . '/documents');
         } catch (\Throwable $th) {
             DB::rollBack();
+            Storage::deleteDirectory($service->id);
             SystemLog::create([
                 'type' => 'error',
                 'action' => 'create_service',
@@ -128,23 +170,158 @@ class ServiceController extends Controller
                 'user_id' => Auth::id(),
                 'ip_address' => request()->ip(),
             ]);
-            return redirect()->back()->with('error', Lang::get('alerts.service_not_created'));
+            return redirect()->back()->with('error', Lang::get('alerts.create_service_error'));
         }
 
         DB::commit();
-        return redirect()->back()->with('success', Lang::get('alerts.service_created'));
+        return redirect()->back()->with('success', Lang::get('alerts.create_service_success'));
     }
 
     /**
-     * Returns all employees in JSON format
-     * @return JsonResponse
+     * Update a service
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function all() : JsonResponse {
-        $services = Service::all([
-            'id', 
-            'name'
+    public function update(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric'],
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'start_date' => ['required', 'date'],
+            'end_date' => ['date'],
+            'zip_code' => ['required', 'string', 'max:8'],
+            'street' => ['required', 'string', 'max:255'],
+            'number' => ['required', 'numeric'],
+            'district' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'uf' => ['required', 'string', 'max:2'],
         ]);
 
-        return response()->json($services);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $service = Service::find($request->id);
+
+        if (!$service) {
+            return redirect()->back()->with('error', Lang::get('alerts.service_not_found'));
+        }
+
+        if ($service->end_date != null && $request->end_date != null && $request->start_date > $request->end_date && $request->end_date == $service->end_date) {
+            return redirect()->back()->with('error', Lang::get('alerts.update_service_error'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $service->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+            $address = $service->address;
+            $address->update([
+                'zip_code' => $request->zip_code,
+                'street' => $request->street,
+                'number' => $request->number,
+                'district' => $request->district,
+                'city' => $request->city,
+                'state' => $request->uf,
+                'formatted_address' => $request->street . ', ' . $request->number . ' - ' . $request->city . ' - ' . $request->uf,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'update_service',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.update_service_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.update_service_success'));
+    }
+
+    /**
+     * Delete a service
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric', 'exists:services,id'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $service = Service::find($request->id);
+
+        if (!$service) {
+            return redirect()->back()->with('error', Lang::get('alerts.service_not_found'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $service->delete();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'delete_service',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.delete_service_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.delete_service_success'));
+    }
+
+    /**
+     * Finish a service
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function finish(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric', 'exists:services,id'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $service = Service::find($request->id);
+
+        if (!$service) {
+            return redirect()->back()->with('error', Lang::get('alerts.service_not_found'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $service->update([
+                'end_date' => date('Y-m-d'),
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'finish_service',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.finish_service_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.finish_service_success'));
     }
 }

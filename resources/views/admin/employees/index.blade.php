@@ -1,86 +1,72 @@
 @extends('adminlte::page')
-
 @section('title', ' Empreiteira Andrades - Administração')
 @section('content_header')
     <h1>{{ trans_choice('general.employees', 2) }}</h1>
+    <p>{{ __('general.employees_list') }}</p>
 @stop
-
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <p>{{ __('general.employees_list') }}</p>
-        </div>
+    <div @class(['text-right'])>
+        @include('adminlte::components.form.button', [
+            'type' => 'button',
+            'label' => __('general.create'),
+            'icon' => 'fas fa-plus',
+            'theme' => 'primary',
+            'classes' => 'mb-4',
+            'attributes' => [
+                'data-toggle' => 'modal',
+                'data-target' => '#createEmployeeModal'
+            ],
+        ])
     </div>
-    <div class="row">
-        <div class="col-12 text-right">
-            @include('adminlte::components.form.button', [
-                'type' => 'button',
-                'label' => __('general.create'),
-                'icon' => 'fas fa-plus',
-                'theme' => 'primary',
-                'classes' => 'mb-4',
-                'attributes' => [
-                    'data-toggle' => 'modal',
-                    'data-target' => '#createEmployeeModal'
-                ],
-            ])
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            @include('adminlte::components.tool.datatable')
-        </div>
-    </div>
+    @include('adminlte::components.tool.datatable')
+    @include('adminlte::components.tool.modal', [
+        'id' => 'createEmployeeModal',
+        'title' => __('general.create_employee'),
+        'icon' => 'fas fa-user-tie-plus',
+        'size' => 'modal-lg',
+        'slot' => 'admin.employees.create',
+        'route' => 'createEmployee',
+        'footer' => true,
+        'deleteFooter' => false,
+    ])
+    @foreach ($data as $employee)
+        @include('adminlte::components.tool.modal', [
+            'id' => 'viewModal' . $employee->id,
+            'title' => __('general.view_employee'),
+            'icon' => 'fas fa-user-tie',
+            'size' => 'modal-lg',
+            'slot' => 'admin.employees.view',
+            'route' => 'viewEmployee',
+            'footer' => false,
+            'deleteFooter' => false,
+            'data' => $employee,
+        ])
+
+        @include('adminlte::components.tool.modal', [
+            'id' => 'updateModal' . $employee->id,
+            'title' => __('general.update_employee'),
+            'icon' => 'fas fa-user-tie-edit',
+            'size' => 'modal-lg',
+            'slot' => 'admin.employees.update',
+            'route' => 'updateEmployee',
+            'footer' => true,
+            'deleteFooter' => false,
+            'data' => $employee,
+        ])
+
+        @include('adminlte::components.tool.modal', [
+            'id' => 'shiftModal' . $employee->id,
+            'title' => __('general.shift_employee'),
+            'icon' => 'fas fa-calendar-week',
+            'size' => 'modal-lg',
+            'slot' => 'admin.employees.shift',
+            'route' => 'createShiftEmployee',
+            'footer' => true,
+            'deleteFooter' => false,
+            'data' => $employee,
+        ])
+    @endforeach
 @stop
-@include('adminlte::components.tool.modal', [
-    'id' => 'createEmployeeModal',
-    'title' => __('general.create_employee'),
-    'icon' => 'fas fa-user-tie-plus',
-    'size' => 'modal-lg',
-    'slot' => 'admin.employees.create',
-    'route' => 'createEmployee',
-    'footer' => true,
-    'deleteFooter' => false,
-])
-
-@foreach ($data as $employee)
-    @include('adminlte::components.tool.modal', [
-        'id' => 'viewModal' . $employee->id,
-        'title' => __('general.view_employee'),
-        'icon' => 'fas fa-user-tie',
-        'size' => 'modal-lg',
-        'slot' => 'admin.employees.view',
-        'route' => 'viewEmployee',
-        'footer' => false,
-        'deleteFooter' => false,
-        'data' => $employee,
-    ])
-
-    @include('adminlte::components.tool.modal', [
-        'id' => 'updateModal' . $employee->id,
-        'title' => __('general.update_employee'),
-        'icon' => 'fas fa-user-tie-edit',
-        'size' => 'modal-lg',
-        'slot' => 'admin.employees.update',
-        'route' => 'updateEmployee',
-        'footer' => true,
-        'deleteFooter' => false,
-        'data' => $employee,
-    ])
-
-    @include('adminlte::components.tool.modal', [
-        'id' => 'shiftModal' . $employee->id,
-        'title' => __('general.shift_employee'),
-        'icon' => 'fas fa-calendar-week',
-        'size' => 'modal-lg',
-        'slot' => 'admin.employees.shift',
-        'route' => 'createShiftEmployee',
-        'footer' => true,
-        'deleteFooter' => false,
-        'data' => $employee,
-    ])
-@endforeach
-
 @section('plugins.BootstrapSwitch', true)
 @include('adminlte::components.tool.onpageload')
 @push('js')
@@ -115,7 +101,13 @@
                             }
                         });
                         const period = `Valor do período: R$ ${response.data.value}`;
-                        document.getElementById('period-value').textContent = period;
+                        $('#period-value').text(period);
+                        $('.loading').hide();
+                        $('.loaded').show();
+                        if (response.data.payment != null) {
+                            $('#confirm-payment').show();
+                            $('#payment-id').val(response.data.payment);
+                        }
                     }
                 }
             });
