@@ -1,220 +1,162 @@
-<div class="row">
-    <table class="table table-bordered">
+<div @class(['row'])>
+    <table @class(['table', 'table-bordered'])>
         <thead>
             <tr>
-                <th>Dia</th>
-                <th>Manhã</th>
-                <th>Tarde</th>
-                <th>Noite</th>
+                <th><i @class(['fas', 'fa-calendar-day'])></i> {{ __('date.day') }}</th>
+                <th><i @class(['fas', 'fa-cloud-sun'])></i> {{ __('date.morning') }}</th>
+                <th><i @class(['fas', 'fa-sun'])></i> {{ __('date.afternoon') }}</th>
+                <th><i @class(['fas', 'fa-moon'])></i> {{ __('date.night') }}</th>
             </tr>
         </thead>
         <tbody>
-            {{-- Monday --}}
-            <tr>
-                <td>
-                    <label for="monday">{{ __('date.monday') }}</label>
-                    <input id="monday" type="hidden" name="shift[mon][date]" value="">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="monday-morning" name="shift[mon][morning]" value="1">
-                            <label for="monday-morning"></label>
+            @for ($i = 1; $i <= 6; $i++)
+                @php
+                    switch ($i) {
+                        case 1:
+                            $day = 'monday';
+                            $shift = 'mon';
+                            break;
+                        case 2:
+                            $day = 'tuesday';
+                            $shift = 'tue';
+                            break;
+                        case 3:
+                            $day = 'wednesday';
+                            $shift = 'wed';
+                            break;
+                        case 4:
+                            $day = 'thursday';
+                            $shift = 'thu';
+                            break;
+                        case 5:
+                            $day = 'friday';
+                            $shift = 'fri';
+                            break;
+                        case 6:
+                            $day = 'saturday';
+                            $shift = 'sat';
+                            break;
+                    }
+                @endphp
+                <tr>
+                    <td>
+                        <label for="{{ $day }}">{{ __('date.' . $day) }}</label>
+                        <input id="{{ $day }}" type="hidden" name="shift[{{ $shift }}][date]" value="">
+                    </td>
+                    <td>
+                        <div @class(['loading'])>
+                            <div @class(['row', 'd-flex', 'justify-content-center'])>
+                                <div @class(['col-4', 'd-flex', 'justify-content-center'])>
+                                    <div @class(['skeleton', 'skeleton-text', 'skeleton-text-body'])></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="monday-afternoon" name="shift[mon][afternoon]" value="1">
-                            <label for="monday-afternoon"></label>
+                        <div @class(['form-group', 'clearfix', 'loaded']) style="display: none;">
+                            <div @class(['icheck-primary', 'd-inline'])>
+                                <input type="checkbox" id="{{ $day }}-morning" name="shift[{{ $shift }}][morning]" value="1">
+                                <label for="{{ $day }}-morning"></label>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="monday-night" name="shift[mon][night]" value="1">
-                            <label for="monday-night"></label>
+                    </td>
+                    <td>
+                        <div @class(['loading'])>
+                            <div @class(['row', 'd-flex', 'justify-content-center'])>
+                                <div @class(['col-4', 'd-flex', 'justify-content-center'])>
+                                    <div @class(['skeleton', 'skeleton-text', 'skeleton-text-body'])></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-
-            {{-- Tuesday --}}
-            <tr>
-                <td>
-                    <label for="tuesday">{{ __('date.tuesday') }}</label>
-                    <input id="tuesday" type="hidden" name="shift[tue][date]" value="">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="tuesday-morning" name="shift[tue][morning]" value="1">
-                            <label for="tuesday-morning"></label>
+                        <div @class(['form-group', 'clearfix', 'loaded']) style="display: none;">
+                            <div @class(['icheck-primary', 'd-inline'])>
+                                <input type="checkbox" id="{{ $day }}-afternoon" name="shift[{{ $shift }}][afternoon]" value="1">
+                                <label for="{{ $day }}-afternoon"></label>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="tuesday-afternoon" name="shift[tue][afternoon]" value="1">
-                            <label for="tuesday-afternoon"></label>
+                    </td>
+                    <td>
+                        <div @class(['loading'])>
+                            <div @class(['row', 'd-flex', 'justify-content-center'])>
+                                <div @class(['col-4', 'd-flex', 'justify-content-center'])>
+                                    <div @class(['skeleton', 'skeleton-text', 'skeleton-text-body'])></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="tuesday-night" name="shift[tue][night]" value="1">
-                            <label for="tuesday-night"></label>
+                        <div @class(['form-group', 'clearfix', 'loaded']) style="display: none;">
+                            <div @class(['icheck-primary', 'd-inline'])>
+                                <input type="checkbox" id="{{ $day }}-night" name="shift[{{ $shift }}][night]" value="1">
+                                <label for="{{ $day }}-night"></label>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-
-            {{-- Wednesday --}}
-            <tr>
-                <td>
-                    <label for="wednesday">{{ __('date.wednesday') }}</label>
-                    <input id="wednesday" type="hidden" name="shift[wed][date]" value="1">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="wednesday-morning" name="shift[wed][morning]" value="1">
-                            <label for="wednesday-morning"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="wednesday-afternoon" name="shift[wed][afternoon]" value="1">
-                            <label for="wednesday-afternoon"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="wednesday-night" name="shift[wed][night]" value="1">
-                            <label for="wednesday-night"></label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            {{-- Thursday --}}
-            <tr>
-                <td>
-                    <label for="thursday">{{ __('date.thursday') }}</label>
-                    <input id="thursday" type="hidden" name="shift[thu][date]" value="">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="thursday-morning" name="shift[thu][morning]" value="1">
-                            <label for="thursday-morning"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="thursday-afternoon" name="shift[thu][afternoon]" value="1">
-                            <label for="thursday-afternoon"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="thursday-night" name="shift[thu][night]" value="1">
-                            <label for="thursday-night"></label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            {{-- Friday --}}
-            <tr>
-                <td>
-                    <label for="friday">{{ __('date.friday') }}</label>
-                    <input id="friday" type="hidden" name="shift[fri][date]" value="">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="friday-morning" name="shift[fri][morning]" value="1">
-                            <label for="friday-morning"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="friday-afternoon" name="shift[fri][afternoon]" value="1">
-                            <label for="friday-afternoon"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="friday-night" name="shift[fri][night]" value="1">
-                            <label for="friday-night"></label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-
-            {{-- Saturday --}}
-            <tr>
-                <td>
-                    <label for="saturday">{{ __('date.saturday') }}</label>
-                    <input id="saturday" type="hidden" name="shift[sat][date]" value="">
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="saturday-morning" name="shift[sat][morning]" value="1">
-                            <label for="saturday-morning"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="saturday-afternoon" name="shift[sat][afternoon]" value="1">
-                            <label for="saturday-afternoon"></label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="checkbox" id="saturday-night" name="shift[sat][night]" value="1">
-                            <label for="saturday-night"></label>
-                        </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            @endfor
         </tbody>
     </table>
 </div>
-<div class="row">
-    <div class="col-12">
-        <div class="text-center">
-            <p id="reference-week"></p>
+    <div @class(['row'])>
+        <div @class(['col-12'])>
+            <div @class(['text-center'])>
+                <p id="reference-week"></p>
+            </div>
+        </div>
+    </div>
+<div @class(['loaded']) style="display: none;">
+    <div @class(['row'])>
+        <div @class(['col-12'])>
+            <div @class(['text-center'])>
+                <p id="period-value"></p>
+            </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <div class="text-center">
-            <p id="period-value"></p>
+<div @class(['loading'])>
+    <div @class(['row', 'd-flex', 'justify-content-center'])>
+        <div @class(['col-6', 'd-flex', 'justify-content-center'])>
+            <div @class(['skeleton', 'skeleton-text', 'skeleton-text-body'])></div>
         </div>
+    </div>
+</div>
+
+<div id="confirm-payment" @class(['row']) style="display: none;">
+    <div @class(['col-12'])>
+        <div @class(['text-center'])>
+            @include('adminlte::components.form.button', [
+                'type' => 'button',
+                'label' => __('general.confirm_payment'),
+                'icon' => 'fas fa-check',
+                'theme' => 'success',
+                'classes' => 'mb-4',
+                'attributes' => [
+                    'id' => 'confirm-payment-button',
+                ],
+            ])
+        </div>
+        <input id="payment-id" type="hidden">
     </div>
 </div>
 <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+@push('js')
+    <script>
+        $('#confirm-payment-button').on('click', function() {
+            var paymentId = $('#payment-id').val();
+            confirmPayment(paymentId);
+        });
+
+        function confirmPayment(paymentId) {
+            $.ajax({
+                url: '{{ route('confirmPayment') }}',
+                type: 'POST',
+                data: {
+                    id: paymentId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showToastMessage(true, response.message);
+                    } else {
+                        showToastMessage(false, response.message);
+                    }
+                }
+            });
+        }
+    </script>
+@endpush

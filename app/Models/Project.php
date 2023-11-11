@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
@@ -16,6 +17,7 @@ class Project extends Model
     public static $STATUS_IN_PROGRESS = 'A';
     public static $STATUS_DONE_ID = '_done';
     public static $STATUS_DONE = 'F';
+    public static $STRING_LIMIT = 15;
 
 
     /**
@@ -28,6 +30,13 @@ class Project extends Model
         'process_status',
         'service_id',
     ];
+
+    /**
+     * Get the service that owns the project.
+     */
+    public function service(): BelongsTo {
+        return $this->belongsTo(Service::class);
+    }
 
     /**
      * Get the medias for the project.

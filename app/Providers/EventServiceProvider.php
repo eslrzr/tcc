@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\AdministrationType;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -9,6 +10,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use JeroenNoten\LaravelAdminLte\Events\DarkModeWasToggled;
 use JeroenNoten\LaravelAdminLte\Events\ReadingDarkModePreference;
+use JeroenNoten\LaravelAdminLte\Events\BuildingMenu;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -30,18 +32,33 @@ class EventServiceProvider extends ServiceProvider
     {
         // Register listener for ReadingDarkModePreference event. We use this
         // event to setup dark mode initial status for AdminLTE package.
-
         Event::listen(
             ReadingDarkModePreference::class,
             [$this, 'handleReadingDarkModeEvt']
         );
 
         // Register listener for DarkModeWasToggled AdminLTE event.
-
         Event::listen(
             DarkModeWasToggled::class,
             [$this, 'handleDarkModeWasToggledEvt']
         );
+
+        // Register listener for BuildingMenu AdminLTE event.
+        Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
+            // Add some items to the menu and remove some others...
+            if (auth()->user()->administration_type_id == AdministrationType::$TYPE_ACCOUNTANT) {
+                $event->menu->remove('documents');
+                $event->menu->remove('in_outs');
+                $event->menu->remove('employees');
+                $event->menu->remove('services');
+                $event->menu->remove('users');
+                $event->menu->add([
+                    'text' => 'documents_management',
+                    'url' => 'admin/documents/management',
+                    'icon' => 'fas fa-fw fa-file-alt',
+                ]);
+            }
+        });
     }
 
     /**
@@ -96,9 +113,5 @@ class EventServiceProvider extends ServiceProvider
         // Store the new dark mode preference on the database.
         $user = User::find(auth()->user()->id);
         $user->setDarkMode($darkModeCfg);
-
-        // TODO: Implement previous method to store the new dark mode
-        // preference for the authenticated user. Usually this preference will
-        // be stored on a database, it is your task to store it.
     }
 }

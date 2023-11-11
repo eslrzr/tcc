@@ -122,7 +122,7 @@ class CashController extends Controller
     }
 
     /**
-     * Register a new in/out
+     * Register a new in/out web
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -172,6 +172,49 @@ class CashController extends Controller
         DB::commit();
 
         return redirect()->back()->with('success', Lang::get('alerts.in_out_register_success'));
+    }
 
+    /**
+     * Register a new in/out internal
+     * @param string $name
+     * @param string $type
+     * @param double $value
+     * @return string
+     */
+    public static function registerInOut(string $name, string $type, $value) : string {
+        $cash = Cash::first();
+        if ($cash->value < $value && $type == InOut::$TYPE_OUT) {
+            return 'alerts.value_greater_than_cash';
+        }
+
+        DB::beginTransaction();
+        try {
+            $inOut = new InOut();
+            $inOut->description = $name;
+            $inOut->name = $name;
+            $inOut->value = $value;
+            if ($type == InOut::$TYPE_IN) {
+                $cash->value += $value;
+            } else {
+                $cash->value -= $value;
+            }
+            $inOut->type = $type;
+            $inOut->cash_id = $cash->id;
+            $inOut->save();
+            $cash->save();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'in_out_register',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return 'alerts.in_out_register_error';
+        }
+        DB::commit();
+
+        return 'alerts.in_out_register_success';
     }
 }

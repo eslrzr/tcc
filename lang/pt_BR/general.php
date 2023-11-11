@@ -11,6 +11,8 @@ return [
     'add' => 'Adicionar',
     'withdraw' => 'Retirar',
     'new' => 'Novo',
+    'start' => 'Início',
+    'total' => 'Total',
     
     'create' => 'Criar',
 
@@ -20,13 +22,17 @@ return [
 
     'documents' => 'Documento|Documentos',
     'documents_list' => 'Lista de documentos do sistema',
+    'document_management' => 'Gerenciamento de documentos',
+    'document_management_explain' => 'Gerencie os documentos, atualize seu processo conforme necessário.',
     'create_document' => 'Criar documento',
 
     'update' => 'Atualizar',
     'loading' => 'Carregando...',
     'administration' => 'Administração',
     'indicators' => 'Indicadores',
+    'charts' => 'Gráficos',
     'operation_indicators' => 'Indicadores de Operação',
+    'financial_charts' => 'Gráficos Financeiros',
 
     'cash' => 'Caixa',
     'add_cash' => 'Adicionar ao caixa',
@@ -36,6 +42,7 @@ return [
     'in_outs_list' => 'Lista de entradas e saídas do caixa',
     'add_in_out_event' => 'Registrar evento',
     'money_in_cash' => 'Dinheiro em caixa',
+    'confirm_payment' => 'Confirmar pagamento',
     
     'employees' => 'Funcionário|Funcionários',
     'employees_list' => 'Lista de funcionários do sistema',
@@ -48,9 +55,14 @@ return [
     'services_list' => 'Lista de serviços do sistema',
     'create_service' => 'Criar serviço',
     'update_service' => 'Atualizar serviço',
+    'delete_service' => 'Remover serviço',
     'services_projects' => 'Projetos do serviço',
     'services_projects_info' => 'Planejamento de projetos do serviço',
+    'finish_service' => 'Finalizar serviço',
 
     'projects' => 'Projeto|Projetos',
     'delete_project' => 'Excluir projeto',
+    'images_project' => 'Adicionar imagens ao projeto',
+
+    'change_password' => 'Alterar senha',
 ];

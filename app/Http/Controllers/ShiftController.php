@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\EmployeeShift;
+use App\Models\Payment;
 use App\Models\SystemLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -30,6 +31,9 @@ class ShiftController extends Controller {
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        $employee = Employee::find($request->employee_id);
+        $periodValue = 0;
 
         DB::beginTransaction();
         try{
@@ -81,7 +85,16 @@ class ShiftController extends Controller {
                 }
                 
                 $employeeShift->save();
+                $periodValue += $employeeShift->period_value * $employee->salary;
             }
+
+            $payment = new Payment();
+            $payment->employee_id = $request->employee_id;
+            $payment->start_date = date('Y-m-d', strtotime($request->start_date));
+            $payment->end_date = date('Y-m-d', strtotime($request->end_date));
+            $payment->value = $periodValue;
+            $payment->save();
+
         } catch (\Throwable $th) {
             DB::rollBack();
             SystemLog::create([
@@ -133,11 +146,18 @@ class ShiftController extends Controller {
             $periodValue += $employeeShift->period_value * $employee->salary;
         }
 
+        $payment = Payment::where('employee_id', $request->employee_id)
+            ->whereBetween('start_date', [$start, $end])
+            ->whereBetween('end_date', [$start, $end])
+            ->where('status', Payment::$STATUS_UNPAID)
+            ->first();
+
         return response()->json([
             'status' => 'success',
             'data' => [
                 'shifts' => $employeeShifts,
-                'value' => $periodValue
+                'value' => $periodValue,
+                'payment' => $payment->id ?? null,
             ],
         ]);
     }

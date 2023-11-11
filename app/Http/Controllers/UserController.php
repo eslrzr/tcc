@@ -116,7 +116,7 @@ class UserController extends Controller {
 
         return response()->json([
             'success' => true,
-            'message' => Lang::get('alerts.status_changed_successfully')
+            'message' => Lang::get('alerts.status_changed_success')
         ]);
     }
 

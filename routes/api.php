@@ -3,6 +3,8 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +27,14 @@ Route::prefix('admin')->group(function () {
     // users
     Route::prefix('users')->group(function () {
         Route::put('/{id}/status', [UserController::class, 'changeStatus'])->name('changeStatus');
+    });
+    // documents
+    Route::prefix('documents')->group(function () {
+        Route::post('/change-process-status', [DocumentController::class, 'changeProcessStatus'])->name('changeProcessStatus');
+    });
+    // employees
+    Route::prefix('employees')->group(function () {
+        Route::post('/confirm-payment', [EmployeeController::class, 'confirmPayment'])->name('confirmPayment');
     });
     // projects
     Route::prefix('projects')->group(function () {
