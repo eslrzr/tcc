@@ -19,7 +19,7 @@ return [
     'start' => 'Início',
     'documents' => 'Documentos',
     'users' => 'Usuários',
-    'employees' => 'Funcionários',
+    'employees' => 'Prestadores de serviço',
     'services' => 'Serviços',
     'in_outs' => 'Entradas e Saídas',
     'documents_management' => 'Processar documentos',

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller {   
@@ -53,10 +54,7 @@ class EmployeeController extends Controller {
                         'html' => '<button title="Editar" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-edit"></i></button>',
                     ],
                     [
-                        'html' => '<button title="Marcar dias trabalhados" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#shiftModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-calendar-week"></i></button>',
-                    ],
-                    [
-                        'html' => '<button title="Remover" type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-trash"></i></button>',
+                        'html' => '<button id="shift-modal-button-' . $employee->id . '" title="Marcar dias trabalhados" type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#shiftModal' . $employee->id . '" data-id="' . $employee->id . '"><i class="fas fa-calendar-week"></i></button>',
                     ],
                 ],
             ];
@@ -149,8 +147,8 @@ class EmployeeController extends Controller {
             'cpf' => 'required|string|max:14',
             'number' => 'required|string|max:15',
             'work_status' => 'required|string|max:1',
-            'birth_date' => 'date',
-            'salary' => 'string|max:10',
+            'birth_date' => 'date|nullable',
+            'salary' => 'string|max:10|nullable',
             'role_id' => 'required|integer|exists:employee_roles,id',
         ]);
 
@@ -169,6 +167,8 @@ class EmployeeController extends Controller {
             $employee->salary = $request->salary;
             $employee->role_id = $request->role_id;
             $employee->save();
+            Storage::makeDirectory($employee->id);
+            Storage::makeDirectory($employee->id . '/documents');
         } catch (\Throwable $th) {
             DB::rollBack();
             SystemLog::create([

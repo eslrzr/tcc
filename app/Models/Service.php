@@ -20,6 +20,9 @@ class Service extends Model
         'description',
         'start_date',
         'end_date',
+        'reopen',
+        'reopen_date',
+        'reopen_description',
     ];
 
     /**
@@ -46,6 +49,9 @@ class Service extends Model
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * Get the address for the service.
+     */
     public function address() {
         return $this->hasOne(Address::class);
     }

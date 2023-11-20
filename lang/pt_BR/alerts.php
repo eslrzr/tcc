@@ -8,14 +8,21 @@ return [
 
     'create_document_success' => 'Documento criado com sucesso.',
     'create_document_error' => 'Erro ao criar documento.',
+    'update_document_success' => 'Documento atualizado com sucesso.',
+    'update_document_error' => 'Erro ao atualizar documento.',
+    'cancel_document_success' => 'Documento cancelado com sucesso.',
+    'cancel_document_error' => 'Erro ao cancelar documento.',
+    'cancel_document_time_error' => 'O tempo para cancelar este documento já expirou.',
+    'confirm_document_cancel' => 'Tem certeza que deseja cancelar este documento?',
+    'explain_document_cancel' => 'Ao cancelar este documento, ele permanecerá no sistema, porém não será mais possível realizar nenhuma ação sobre ele.',
 
     'status_changed_success' => 'Status alterado com sucesso.',
     'status_changed_error' => 'Erro ao alterar status.',
 
     'create_employee_success' => 'Funcionário criado com sucesso.',
-    'create_employee_error' => 'Erro ao criar funcionário.',
+    'create_employee_error' => 'Erro ao criar prestador de serviço.',
     'update_employee_success' => 'Funcionário atualizado com sucesso.',
-    'update_employee_error' => 'Erro ao atualizar funcionário.',
+    'update_employee_error' => 'Erro ao atualizar prestador de serviço.',
 
     'shift_register_success' => 'Turno registrado com sucesso.',
     'shift_register_error' => 'Erro ao registrar turno.',
@@ -35,6 +42,12 @@ return [
     'explain_delete_service' => 'Ao excluir este serviço, todos os projetos e documentos relacionados a ele serão excluídos também.',
     'service_finished' => 'Todas as etapas deste serviço foram concluídas, você pode finalizar o serviço pelo botão abaixo.',
     'confirm_finish_service' => 'Tem certeza que deseja finalizar este serviço?',
+    'finish_service_success' => 'Serviço finalizado com sucesso.',
+    'finish_service_error' => 'Erro ao finalizar serviço.',
+    'service_reopen' => 'Este serviço já foi finalizado, você pode reabri-lo pelo botão abaixo.',
+    'confirm_reopen_service' => 'Tem certeza que deseja reabrir este serviço?',
+    'reopen_service_success' => 'Serviço reaberto com sucesso.',
+    'reopen_service_error' => 'Erro ao reabrir serviço.',
 
     'create_project_success' => 'Projeto criado com sucesso.',
     'create_project_error' => 'Erro ao criar projeto.',
@@ -49,4 +62,10 @@ return [
 
     'not_found_cep' => 'CEP não encontrado.',
     'invalid_cep' => 'CEP inválido.',
+
+    'explain_filter' => 'Utilize os filtros abaixo para encontrar o que deseja.',
+    'explain_loading_table' => 'Carregando dados...',
+
+    'press_enter_send_comment' => 'Pressione enter para enviar o comentário.', 
+    'no_comments' => 'Este documento ainda não possui comentários.',
 ];

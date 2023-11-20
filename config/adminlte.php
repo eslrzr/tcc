@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'title' => 'Empreiteira Andrades',
+    'title' => Lang::get('general.app_name'),
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -31,8 +31,9 @@ return [
     |
     */
 
-    'use_ico_only' => false,
-    'use_full_favicon' => true,
+    'use_ico_only' => true,
+    'use_full_favicon' => false,
+    'favicon' => 'vendor/adminlte/dist/img/logoBlack.png',
 
     /*
     |--------------------------------------------------------------------------
@@ -69,7 +70,7 @@ return [
     'logo_img_class' => 'brand-image elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Empreiteira Andrades',
+    'logo_img_alt' => Lang::get('general.app_name'),
 
     /*
     |--------------------------------------------------------------------------
@@ -88,7 +89,7 @@ return [
         'enabled' => true,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/logoBlackTitle.png',
-            'alt' => 'Empreiteira Andrades',
+            'alt' => Lang::get('general.app_name'),
             'class' => '',
             'width' => 135,
             'height' => 85,
@@ -296,15 +297,6 @@ return [
             'type'         => 'darkmode-widget',
             'topnav_right' => true,
         ],
-        // [
-        //     'type'         => 'navbar-search',
-        //     'text'         => 'search',        // Placeholder for the underlying input.
-        //     'topnav_right' => true,            // Or "topnav => true" to place on the left.
-        //     'url'          => 'navbar/search', // The url used to submit the data ('#' by default).
-        //     'method'       => 'post',          // 'get' or 'post' ('get' by default).
-        //     'input_name'   => 'search',
-        //     'id'           => 'navbarSearch'   // ID attribute for the underlying input (optional).
-        // ],
 
         // Usermenu items:
         [
@@ -346,63 +338,6 @@ return [
             'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-users',
         ],
-        // [
-        //     'text' => 'cadastro',
-        //     'icon' => 'fas fa-fw fa-plus',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //             'submenu' => [
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                 ],
-        //                 [
-        //                     'text' => 'level_two',
-        //                     'url' => '#',
-        //                     'submenu' => [
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                         [
-        //                             'text' => 'level_three',
-        //                             'url' => '#',
-        //                         ],
-        //                     ],
-        //                 ],
-        //             ],
-        //         ],
-        //         [
-        //             'text' => 'level_one',
-        //             'url' => '#',
-        //         ],
-        //     ],
-        // ],
-        // [
-        //     'text' => 'blog',
-        //     'url' => 'admin/blog',
-        //     'can' => 'manage-blog',
-        // ],
-        // [
-        //     'text' => 'pages',
-        //     'url' => 'admin/pages',
-        //     'icon' => 'far fa-fw fa-file',
-        //     'label' => 4,
-        //     'label_color' => 'success',
-        // ],
-
-        // ['header' => 'account_settings'],
-        // [
-        //     'text' => 'profile',
-        //     'url' => 'admin/settings',
-        //     'icon' => 'fas fa-fw fa-user',
-        // ],
     ],
 
     /*

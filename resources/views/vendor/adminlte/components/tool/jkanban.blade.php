@@ -134,6 +134,9 @@
     });
 
     var finished = true;
+    if (projects.length == 0) {
+      finished = false;
+    }
     projects.forEach(function(project) {
       var boardId;
       switch (project.process_status) {
@@ -186,6 +189,6 @@
       $('#finish-service').hide();
     } else {
       $('#finish-service').show();
-    }
+    }    
   </script>
 @endpush

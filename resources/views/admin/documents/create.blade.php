@@ -33,12 +33,13 @@
                 <option value="" @disabled(true) @selected(true)>{{ __('form.linked_to') }}</option>
                 <option value="{{ \app\Models\Document::$LINKED_TO_EMPLOYEE }}">{{ trans_choice('general.employees', 1) }}</option>
                 <option value="{{ \app\Models\Document::$LINKED_TO_SERVICE }}">{{ trans_choice('general.services', 1) }}</option>
+                <option value="{{ \app\Models\Document::$LINKED_TO_ACCOUNTANT }}">{{ trans_choice('general.accountants', 1) }}</option>
             </select>
         </div>
     </div>
     <div @class(['col-6', 'employees-select']) hidden>
         <div @class(['form-group'])>
-            <label for="employees"><i @class(['fas', 'fa-group'])></i>  {{ trans_choice('general.employees', 2) }}</label>
+            <label for="employees"><i @class(['fas', 'fa-user-tie'])></i>  {{ trans_choice('general.employees', 2) }}</label>
             <select id="employees" @class(['form-control']) name="employee_id">
                 <option value="" @disabled(true) @selected(true)>{{ trans_choice('general.employees', 2) }}</option>
             </select>

@@ -1,5 +1,7 @@
 <?php
 return [
+    'date' => 'Data',
+
     'sunday' => 'Domingo',
     'monday' => 'Segunda-feira',
     'tuesday' => 'Terça-feira',

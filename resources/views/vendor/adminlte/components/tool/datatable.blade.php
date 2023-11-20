@@ -20,7 +20,7 @@
         @foreach($data as $item)
             <tr>
                 @foreach($heads as $th => $value)
-                    @if ($th == 'actions')
+                    @if ($th == 'actions' && isset($item->$th['buttons']))
                         <td class="text-center"> 
                             @foreach ($item->$th['buttons'] as $button)
                                 {!! $button['html'] !!}

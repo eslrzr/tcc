@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'app_name' => 'Empreiteira Andrades',
+
     'yes' => 'Sim',
     'no' => 'Não',
     'save' => 'Salvar',
@@ -13,9 +15,12 @@ return [
     'new' => 'Novo',
     'start' => 'Início',
     'total' => 'Total',
-    
     'create' => 'Criar',
+    'send' => 'Enviar',
+    'paid' => 'Pago',
+    'waiting_payment' => 'Aguardando pagamento',
 
+    'accountants' => 'Contador|Contadores',
     'users' => 'Usuário|Usuários',
     'users_list' => 'Lista de usuários do sistema',
     'create_user' => 'Criar usuário',
@@ -24,7 +29,10 @@ return [
     'documents_list' => 'Lista de documentos do sistema',
     'document_management' => 'Gerenciamento de documentos',
     'document_management_explain' => 'Gerencie os documentos, atualize seu processo conforme necessário.',
+    'document_comments' => 'Comentários do documento',
     'create_document' => 'Criar documento',
+    'update_document' => 'Atualizar documento',
+    'cancel_document' => 'Cancelar processo do documento',
 
     'update' => 'Atualizar',
     'loading' => 'Carregando...',
@@ -44,12 +52,12 @@ return [
     'money_in_cash' => 'Dinheiro em caixa',
     'confirm_payment' => 'Confirmar pagamento',
     
-    'employees' => 'Funcionário|Funcionários',
-    'employees_list' => 'Lista de funcionários do sistema',
-    'view_employee' => 'Informações do funcionário',
-    'create_employee' => 'Criar funcionário',
-    'update_employee' => 'Atualizar funcionário',
-    'shift_employee' => 'Escala de trabalho do funcionário',
+    'employees' => 'Prestador de serviço|Prestadores de serviço',
+    'employees_list' => 'Lista de prestadores de serviço do sistema',
+    'view_employee' => 'Informações do prestador de serviço',
+    'create_employee' => 'Criar prestador de serviço',
+    'update_employee' => 'Atualizar prestador de serviço',
+    'shift_employee' => 'Escala de trabalho do prestador de serviço',
     
     'services' => 'Serviço|Serviços',
     'services_list' => 'Lista de serviços do sistema',
@@ -59,10 +67,13 @@ return [
     'services_projects' => 'Projetos do serviço',
     'services_projects_info' => 'Planejamento de projetos do serviço',
     'finish_service' => 'Finalizar serviço',
+    'reopen_service' => 'Reabrir serviço',
 
     'projects' => 'Projeto|Projetos',
     'delete_project' => 'Excluir projeto',
     'images_project' => 'Adicionar imagens ao projeto',
 
     'change_password' => 'Alterar senha',
+    
+    'generate_pdf' => 'Gerar PDF',
 ];

@@ -50,9 +50,9 @@
     {{-- Custom Stylesheets (post AdminLTE) --}}
     @yield('adminlte_css')
 
-    {{-- Favicon
+    {{-- Favicon --}}
     @if(config('adminlte.use_ico_only'))
-        <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />
+        <link rel="shortcut icon" href="{{ asset(config('adminlte.favicon')) }}" />
     @elseif(config('adminlte.use_full_favicon'))
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />
         <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('favicons/apple-icon-57x57.png') }}">
@@ -71,7 +71,7 @@
         <link rel="manifest" crossorigin="use-credentials" href="{{ asset('favicons/manifest.json') }}">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
-    @endif --}}
+    @endif
 
     {{-- jKanban --}}
     <link href="{{ asset('vendor/jkanban/jkanban.min.css') }}" rel="stylesheet" type="text/css" />

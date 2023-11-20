@@ -6,9 +6,12 @@ use App\Models\Employee;
 use App\Models\EmployeeShift;
 use App\Models\Payment;
 use App\Models\SystemLog;
+use Barryvdh\DomPDF\PDF;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
@@ -26,6 +29,8 @@ class ShiftController extends Controller {
         $validator = Validator::make($request->all(), [
             'shift' => 'required|array',
             'employee_id' => 'required|integer',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
         ]);
 
         if ($validator->fails()) {
@@ -88,13 +93,20 @@ class ShiftController extends Controller {
                 $periodValue += $employeeShift->period_value * $employee->salary;
             }
 
-            $payment = new Payment();
+            $payment = Payment::where('employee_id', $request->employee_id)
+                ->whereBetween('start_date', [$request->start_date, $request->end_date])
+                ->whereBetween('end_date', [$request->start_date, $request->end_date])
+                ->first();
+
+            if (empty($payment)) {
+                $payment = new Payment();
+            }
+
             $payment->employee_id = $request->employee_id;
             $payment->start_date = date('Y-m-d', strtotime($request->start_date));
             $payment->end_date = date('Y-m-d', strtotime($request->end_date));
             $payment->value = $periodValue;
             $payment->save();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             SystemLog::create([
@@ -149,7 +161,6 @@ class ShiftController extends Controller {
         $payment = Payment::where('employee_id', $request->employee_id)
             ->whereBetween('start_date', [$start, $end])
             ->whereBetween('end_date', [$start, $end])
-            ->where('status', Payment::$STATUS_UNPAID)
             ->first();
 
         return response()->json([
@@ -157,8 +168,61 @@ class ShiftController extends Controller {
             'data' => [
                 'shifts' => $employeeShifts,
                 'value' => $periodValue,
-                'payment' => $payment->id ?? null,
+                'payment' => $payment,
             ],
+        ]);
+    }
+
+    /**
+     * Generate the employee shift PDF
+     * 
+     * @param Request $request
+     * @return Response
+     */
+    public function generatePDF(Request $request) : Response  {
+        $validator = Validator::make($request->all(), [
+            'employee_id' => 'required|integer',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $employee = Employee::find($request->employee_id);
+        $employeeShifts = EmployeeShift::where('employee_id', $request->employee_id)
+            ->whereBetween('date', [$request->start_date, $request->end_date])
+            ->orderBy('id', 'desc')
+            ->limit(6)
+            ->get();
+
+        $employeeShifts = $employeeShifts->sortBy('date');
+
+        $periodValue = 0;
+        foreach ($employeeShifts as $employeeShift) {
+            $employee = Employee::find($employeeShift->employee_id);
+            $periodValue += $employeeShift->period_value * $employee->salary;
+        }
+
+        $payment = Payment::where('employee_id', $request->employee_id)
+            ->whereBetween('start_date', [$request->start_date, $request->end_date])
+            ->whereBetween('end_date', [$request->start_date, $request->end_date])
+            ->first();
+
+        if (empty($payment) || $payment->status == 0) {
+            $status = 'waiting_payment';
+        } else {
+            $status = 'paid';
+        }
+
+        return PDFController::generatePDF('employee_shifts', [
+            'data' => [
+                'employee_name' => $employee->name,
+                'shifts' => $employeeShifts,
+                'value' => 'R$ ' . $periodValue,
+                'status' => $status,
+            ]
         ]);
     }
 }

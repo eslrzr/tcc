@@ -43,8 +43,10 @@ Route::middleware(['auth.check'])->group(function () {
             Route::get('/', [DocumentController::class, 'view'])->name('documents');
             Route::get('/management', [DocumentController::class, 'managementView'])->name('managementView');
             Route::post('/create', [DocumentController::class, 'create'])->name('createDocument');
-            // Route::post('/update', [DocumentController::class, 'update'])->name('updateDocument');
-            // Route::post('/delete', [DocumentController::class, 'delete'])->name('deleteDocument');
+            Route::post('/update', [DocumentController::class, 'update'])->name('updateDocument');
+            Route::post('/cancel', [DocumentController::class, 'cancel'])->name('cancelDocument');
+            Route::get('/comments', [DocumentController::class, 'loadComments'])->name('loadDocumentComments');
+            Route::post('/comment', [DocumentController::class, 'storeComment'])->name('storeDocumentComment');
         });
         // employees
         Route::prefix('employees')->group(function () {
@@ -60,6 +62,7 @@ Route::middleware(['auth.check'])->group(function () {
                 Route::post('/', [EmployeeController::class, 'shift'])->name('shiftEmployee');
                 Route::get('/info', [ShiftController::class, 'weekShifts'])->name('calculateEmployeeShift');
                 Route::post('/create', [ShiftController::class, 'register'])->name('createShiftEmployee');
+                Route::get('/pdf', [ShiftController::class, 'generatePDF'])->name('employeeShiftPDF');
             });
             // Route::post('/delete', [EmployeeController::class, 'delete'])->name('deleteEmployee');
         });
@@ -72,6 +75,7 @@ Route::middleware(['auth.check'])->group(function () {
             Route::post('/update', [ServiceController::class, 'update'])->name('updateService');
             Route::post('/delete', [ServiceController::class, 'delete'])->name('deleteService');
             Route::post('/finish', [ServiceController::class, 'finish'])->name('finishService');
+            Route::post('/reopen', [ServiceController::class, 'reopen'])->name('reopenService');
         });
         // projects
         Route::prefix('projects')->group(function () {

@@ -26,8 +26,10 @@
         'size' => 'modal-lg',
         'slot' => 'admin.services.create',
         'route' => 'createService',
+        'hasForm' => true,
         'footer' => true,
         'deleteFooter' => false,
+        'cancelFooter' => false,
     ])
     @foreach ($data as $service)
         @include('adminlte::components.tool.modal', [
@@ -37,8 +39,10 @@
             'size' => 'modal-lg',
             'slot' => 'admin.services.update',
             'route' => 'updateService',
+            'hasForm' => true,
             'footer' => true,
             'deleteFooter' => false,
+            'cancelFooter' => false,
             'data' => $service
         ])
         @include('adminlte::components.tool.modal', [
@@ -48,8 +52,10 @@
             'size' => 'modal-md',
             'slot' => 'admin.services.delete',
             'route' => 'deleteService',
+            'hasForm' => false,
             'footer' => false,
             'deleteFooter' => true,
+            'cancelFooter' => false,
             'data' => $service
         ])
     @endforeach

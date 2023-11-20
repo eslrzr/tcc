@@ -26,8 +26,10 @@
     'size' => 'modal-lg',
     'slot' => 'admin.users.create',
     'route' => 'createUser',
+    'hasForm' => true,
     'footer' => true,
     'deleteFooter' => false,
+    'cancelFooter' => false,
 ])
 @stop
 @section('plugins.BootstrapSwitch', true)

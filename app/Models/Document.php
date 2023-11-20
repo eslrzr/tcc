@@ -11,12 +11,15 @@ class Document extends Model
 
     public static $LINKED_TO_EMPLOYEE = 'E';
     public static $LINKED_TO_SERVICE = 'S';
+    public static $LINKED_TO_ACCOUNTANT = 'A';
 
     public static $PROCESS_STATUS_NOT_APPLICABLE = 'X';
     public static $PROCESS_STATUS_PENDING = 'N';
     public static $PROCESS_STATUS_IN_PROGRESS = 'A';
     public static $PROCESS_STATUS_FINISHED = 'F';
     public static $PROCESS_STATUS_REJECTED = 'R';
+    public static $PROCESS_STATUS_CANCELED = 'C';
+
 
 
     /**
@@ -37,24 +40,21 @@ class Document extends Model
     /**
      * Get the employee that owns the document.
      */
-    public function employee()
-    {
+    public function employee() {
         return $this->belongsTo(Employee::class);
     }
 
     /**
      * Get the service that owns the document.
      */
-    public function service()
-    {
+    public function service() {
         return $this->belongsTo(Service::class);
     }
 
     /**
      * Get the document type that owns the document.
      */
-    public function documentType()
-    {
+    public function documentType() {
         return $this->belongsTo(DocumentType::class);
     }
 }

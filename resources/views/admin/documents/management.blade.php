@@ -13,9 +13,10 @@
         'icon' => 'fas fa-comment',
         'size' => 'modal-md',
         'slot' => 'admin.documents.comments',
-        'route' => 'viewEmployee',
+        'hasForm' => false,
         'footer' => false,
         'deleteFooter' => false,
+        'cancelFooter' => false,
     ])
     @endforeach
 @stop
@@ -59,6 +60,61 @@
                     }
                 },
             });
+        }
+
+        $('[id^=comment-modal-button-]').on('click', function() {
+            var documentId = $(this).attr('id').replace('comment-modal-button-', '');
+            loadDocumentComments(documentId);
+        });
+
+        $('[id^=comment-document-button-]').on('click', function () {
+            var documentId = $(this).attr('id').replace('comment-document-button-', '');
+            var comment = $('#comment-text-' + documentId).val();
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                url: '{{ route('storeDocumentComment') }}',
+                type: 'POST',
+                data: {
+                    id: documentId,
+                    comment: comment,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $('#no-comment-message-' + documentId).hide();
+                        $('#comment-text-' + documentId).val('');
+                        $('#document-comments-' + documentId).append(response.data.comments);
+                    } else {
+                        showToastMessage(false, response.message);
+                    }
+                },
+            });
+        });
+
+        function loadDocumentComments(documentId) {
+            var loaded = $('#loaded-comments-' + documentId).val();
+            if (loaded == 1) {
+                return;
+            }
+            setTimeout(function () {
+                $.ajax({
+                    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                    url: '{{ route('loadDocumentComments') }}',
+                    type: 'GET',
+                    data: {
+                        id: documentId,
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#loaded-comments-' + documentId).val(1);
+                            $('.loading' + documentId).hide();
+                            $('#document-comments-' + documentId).append(response.data.comments);
+                        } else {
+                            $('.loading' + documentId).hide();
+                            showToastMessage(false, response.message);
+                        }
+                    },
+                });
+            }, 1000);
         }
     </script>
 @endpush

@@ -49,9 +49,7 @@
             fetch(
                 "{{ route('adminlte.darkmode.toggle') }}",
                 fetchCfg
-            ).then((response) => {
-                console.log(response);
-            }).catch((error) => {
+            ).catch((error) => {
                 console.log(
                     'Failed to notify server that dark mode was toggled',
                     error

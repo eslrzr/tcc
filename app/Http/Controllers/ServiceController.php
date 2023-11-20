@@ -43,7 +43,7 @@ class ServiceController extends Controller
             $service->actions = [
                 'buttons' => [
                     [
-                        'html' => '<a href="/admin/services/'. $service->id .'" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a>',
+                        'html' => '<a href="/admin/services/'. $service->id .'" class="btn btn-light btn-sm"><i class="fas fa-project-diagram"></i></a>',
                     ],
                     [
                         'html' => '<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal' . $service->id . '" data-id="' . $service->id . '"><i class="fas fa-edit"></i></button>',
@@ -128,7 +128,7 @@ class ServiceController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'start_date' => ['required', 'date'],
-            'zip_code' => ['required', 'string', 'max:8'],
+            'zip_code' => ['required', 'string', 'max:9'],
             'street' => ['required', 'string', 'max:255'],
             'number' => ['required', 'numeric'],
             'district' => ['required', 'string', 'max:255'],
@@ -189,7 +189,7 @@ class ServiceController extends Controller
             'description' => ['required', 'string'],
             'start_date' => ['required', 'date'],
             'end_date' => ['date'],
-            'zip_code' => ['required', 'string', 'max:8'],
+            'zip_code' => ['required', 'string', 'max:9'],
             'street' => ['required', 'string', 'max:255'],
             'number' => ['required', 'numeric'],
             'district' => ['required', 'string', 'max:255'],
@@ -306,9 +306,16 @@ class ServiceController extends Controller
 
         DB::beginTransaction();
         try {
-            $service->update([
-                'end_date' => date('Y-m-d'),
-            ]);
+            if ($service->reopen) {
+                $service->update([
+                    'reopen' => false,
+                    'reopen_finish_date' => date('Y-m-d'),
+                ]);
+            } else {
+                $service->update([
+                    'end_date' => date('Y-m-d'),
+                ]);
+            }
         } catch (\Throwable $th) {
             DB::rollBack();
             SystemLog::create([
@@ -323,5 +330,50 @@ class ServiceController extends Controller
 
         DB::commit();
         return redirect()->back()->with('success', Lang::get('alerts.finish_service_success'));
+    }
+
+    /**
+     * Reopen a service
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reopen(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'numeric', 'exists:services,id'],
+            'description' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $service = Service::find($request->id);
+
+        if (!$service) {
+            return redirect()->back()->with('error', Lang::get('alerts.service_not_found'));
+        }
+
+        DB::beginTransaction();
+        try {
+            $service->update([
+                'reopen' => true,
+                'reopen_date' => date('Y-m-d'),
+                'reopen_description' => $request->description,
+                'reopen_count' => $service->reopen_count++,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            SystemLog::create([
+                'type' => 'error',
+                'action' => 'reopen_service',
+                'message' => $th->getMessage(),
+                'user_id' => Auth::id(),
+                'ip_address' => request()->ip(),
+            ]);
+            return redirect()->back()->with('error', Lang::get('alerts.reopen_service_error'));
+        }
+
+        DB::commit();
+        return redirect()->back()->with('success', Lang::get('alerts.reopen_service_success'));
     }
 }

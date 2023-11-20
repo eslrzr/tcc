@@ -55,6 +55,7 @@ return [
     'document_in_progress' => 'Em andamento',
     'document_finished' => 'Finalizado',
     'document_rejected' => 'Rejeitado',
+    'document_canceled' => 'Cancelado',
 
     'active' => 'Ativo',
     'inactive' => 'Inativo',
@@ -71,4 +72,9 @@ return [
     'optional_choose_file' => 'Escolha um arquivo (opcional)',
     'add_or_drop_images' => 'Adicione ou arraste imagens aqui',
     'add_or_drop_files' => 'Adicione ou arraste arquivos aqui',
+
+    'period_value' => 'Valor do período',
+
+    'reopen_reason' => 'Motivo da reabertura',
+    'explain_reopen_reason' => 'Explique o motivo da reabertura do serviço.',
 ];

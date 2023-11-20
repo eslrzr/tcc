@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('path');
-            $table->enum('process_status', ['X', 'N', 'A', 'F', 'R'])->default('N')->comment('X - Não atribuido, N - Não iniciado, A - Em andamento, F - Finalizado, R - Recusado');
+            $table->enum('process_status', ['X', 'N', 'A', 'F', 'R', 'C'])->default('N')->comment('X - Não atribuido, N - Não iniciado, A - Em andamento, F - Finalizado, R - Recusado, C - Cancelado');
             $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade')->nullable();
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade')->nullable();
             $table->foreignId('document_type_id')->constrained('document_types');

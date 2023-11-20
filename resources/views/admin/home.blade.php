@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>
-<h3>@lang('general.charts')</h3>
+{{-- <h3>@lang('general.charts')</h3>
 <p>@lang('general.financial_charts')</p>
 <div class="row">
     <div class="col-6">
@@ -61,34 +61,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @stop
-{{-- @include('adminlte::components.tool.onpageload')
-@push('js')
-    <script>
-        $(function () {
-            var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-            var donutData        = {
-                labels: [
-                    '@lang('general.in')',
-                    '@lang('general.out')',
-                ],
-                datasets: [
-                    {
-                        data: [{{ 1 }}, {{ 2 }}],
-                        backgroundColor : ['#f56954', '#00a65a'],
-                    }
-                ]
-            }
-            var donutOptions     = {
-                maintainAspectRatio : false,
-                responsive : true,
-            }
-            var donutChart = new Chart(donutChartCanvas, {
-                type: 'doughnut',
-                data: donutData,
-                options: donutOptions
-            })
-        })
-    </script>
-@endpush --}}
